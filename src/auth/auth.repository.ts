@@ -25,9 +25,13 @@ export class AuthRepository {
         return this.prisma.user.findUnique({ where: { id } });
     }
 
-    async updateRefreshToken(id: string, refreshToken: string): Promise<User> {
+    async findUserByUserKey(userKey: string): Promise<User | null> {
+        return this.prisma.user.findUnique({ where: { userKey } });
+    }
+
+    async updateRefreshToken(userKey: string, refreshToken: string): Promise<User> {
         return this.prisma.user.update({
-            where: { id },
+            where: { userKey },
             data: { refreshToken },
         });
     }

@@ -59,7 +59,7 @@ export class AuthService {
     async refreshToken(refreshToken: string): Promise<TokenDto> {
         try {
             const payload = this.jwtService.verify(refreshToken);
-            const user = await this.authRepository.findUserById(payload.sub);
+            const user = await this.authRepository.findUserByUserKey(payload.sub);
 
             if (!user || user.refreshToken !== refreshToken) {
                 throw new UnauthorizedException('Invalid refresh token');
@@ -86,6 +86,9 @@ export class AuthService {
         return this.authRepository.findUserById(userId);
     }
 
+    async validateUserByUserKey(userKey: string): Promise<User | null> {
+        return this.authRepository.findUserByUserKey(userKey);
+    }
 
     async validateApiKey(publicKey: string, secretKey: string): Promise<boolean> {
         return this.authRepository.validateApiKeys(publicKey, secretKey);
@@ -97,7 +100,7 @@ export class AuthService {
 
     private async generateTokens(user: User): Promise<TokenDto> {
         const payload: JwtPayload = {
-            sub: user.id,
+            sub: user.userKey,
             email: user.email,
             role: user.role
         };
@@ -105,7 +108,7 @@ export class AuthService {
         const accessToken = this.jwtService.sign(payload);
         const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
 
-        await this.authRepository.updateRefreshToken(user.id, refreshToken);
+        await this.authRepository.updateRefreshToken(user.userKey, refreshToken);
 
         return {
             accessToken,

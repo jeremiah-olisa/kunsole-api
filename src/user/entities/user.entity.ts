@@ -1,12 +1,14 @@
 import { AuthProvider, User, UserRole } from '@prisma/client';
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiHideProperty } from '@nestjs/swagger';
+import { Exclude } from 'class-transformer';
 
 export class UserEntity implements User {
     constructor(partial?: Partial<User>) {
         Object.assign(this, partial);
     }
 
-    @ApiProperty({ description: 'User ID' })
+    @Exclude()
+    @ApiHideProperty()
     id: string;
 
     @ApiProperty({ example: 'user@example.com', description: 'User email' })
@@ -18,17 +20,18 @@ export class UserEntity implements User {
     @ApiProperty({ description: 'Unique user key' })
     userKey: string;
 
-    @ApiProperty({ required: false, description: 'Hashed password' })
+    @Exclude()
+    @ApiHideProperty()
     password: string | null;
 
     @ApiProperty({ enum: AuthProvider, description: 'Authentication provider' })
     provider: AuthProvider;
 
     @ApiProperty({ required: false, description: 'Provider ID for OAuth' })
-    providerId: string | null;;
+    providerId: string | null;
 
     @ApiProperty({ required: false, description: 'Profile image URL' })
-    profileImage: string | null;;
+    profileImage: string | null;
 
     @ApiProperty({ enum: UserRole, description: 'User role' })
     role: UserRole;
@@ -36,8 +39,9 @@ export class UserEntity implements User {
     @ApiProperty({ required: false, description: 'Last login timestamp' })
     lastLogin: Date | null;
 
-    @ApiProperty({ required: false, description: 'Refresh token' })
-    refreshToken: string | null;;
+    @Exclude()
+    @ApiHideProperty()
+    refreshToken: string | null;
 
     @ApiProperty({ description: 'Creation timestamp' })
     createdAt: Date;
