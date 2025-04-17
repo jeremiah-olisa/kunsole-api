@@ -1,6 +1,6 @@
 generator client {
   provider = "prisma-client-js"
-  output   = "./../src/infrastructure/prisma/client"
+  output   = "./../src/prisma/client"
 }
 
 datasource db {
@@ -9,7 +9,7 @@ datasource db {
 }
 
 enum AuthProvider {
-  LOCAL
+  PASSWORD
   GOOGLE
   GITHUB
 }
@@ -54,10 +54,9 @@ model User {
   fullName      String
   userKey       String         @unique @default(uuid()) // UUID for user identification
   password      String? // Nullable for OAuth users
-  provider      AuthProvider   @default(LOCAL)
+  provider      AuthProvider   @default(PASSWORD)
   providerId    String? // ID from OAuth provider
   profileImage  String?
-  permissions   String[]       @default([])
   lastLogin     DateTime?
   refreshToken  String?
   createdAt     DateTime       @default(now())
