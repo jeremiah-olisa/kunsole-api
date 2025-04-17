@@ -13,9 +13,9 @@ import { NestExpressApplication } from '@nestjs/platform-express';
 
 import { AppModule } from './app.module';
 import { PrismaClientExceptionFilter } from 'nestjs-prisma';
-import { InternalServerExceptionFilter } from './exceptions/internalserver.exception.filter';
-import { PrismaInterceptor } from './prisma/prisma.interceptor';
-import { InitialiseClient } from './prisma/prisma.client';
+import { InternalServerExceptionFilter } from './common/exceptions/internalserver.exception.filter';
+import { PrismaInterceptor } from './common/prisma/prisma.interceptor';
+import { InitialiseClient } from './common/prisma/prisma.client';
 
 export type NodePlatform = 'express' | 'fastify';
 
