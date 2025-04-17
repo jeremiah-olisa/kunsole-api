@@ -1,6 +1,7 @@
 import { ApiHideProperty, ApiProperty } from '@nestjs/swagger';
 import { App as PrismaApp, Plan, UserApp } from '@prisma/client';
 import { Exclude } from 'class-transformer';
+import { PaginatedResult } from 'src/common/interfaces/pagination.interface';
 
 export class AppEntity implements PrismaApp {
     @ApiHideProperty()
@@ -48,3 +49,8 @@ export class AppEntity implements PrismaApp {
         Object.assign(this, partial);
     }
 }
+
+export class PaginatedAppResult extends PaginatedResult<AppEntity> {
+    @ApiProperty({ type: [AppEntity] })
+    declare data: AppEntity[];
+  }

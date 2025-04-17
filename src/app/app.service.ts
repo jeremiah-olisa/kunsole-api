@@ -2,7 +2,7 @@ import { Injectable, ForbiddenException, NotFoundException } from '@nestjs/commo
 import * as crypto from 'crypto';
 import * as bcrypt from 'bcrypt';
 import { $Enums, AppUserRole, Prisma } from '@prisma/client';
-import { KeysetPaginationParams, PaginatedResult } from './../common/interfaces/pagination.interface';
+import { IKeysetPaginationParams, IPaginatedResult } from './../common/interfaces/pagination.interface';
 import { AppRepository } from './repositories/app.repository';
 import { AppEntity } from './entities/app.entity/app.entity';
 import { CreateAppDto } from './dtos/create-app.dto/create-app.dto';
@@ -60,8 +60,8 @@ export class AppService {
 
     async getUserApps(
         userId: string,
-        pagination?: KeysetPaginationParams,
-    ): Promise<PaginatedResult<AppEntity>> {
+        pagination?: IKeysetPaginationParams,
+    ): Promise<IPaginatedResult<AppEntity>> {
         const result = await this.appRepository.findAllByUser(userId, pagination);
         return {
             ...result,

@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Prisma, App, AppUserRole, $Enums } from '@prisma/client';
-import { KeysetPaginationParams, PaginatedResult } from '../../common/interfaces/pagination.interface';
+import { IKeysetPaginationParams, IPaginatedResult } from '../../common/interfaces/pagination.interface';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'nestjs-prisma';
 
@@ -51,8 +51,8 @@ export class AppRepository {
 
     async findAllByUser(
         userId: string,
-        pagination?: KeysetPaginationParams,
-    ): Promise<PaginatedResult<App>> {
+        pagination?: IKeysetPaginationParams,
+    ): Promise<IPaginatedResult<App>> {
         const limit = Math.min(pagination?.limit || this.DEFAULT_LIMIT, this.MAX_LIMIT);
         const direction = pagination?.direction || 'forward';
         const cursor = pagination?.cursor
@@ -88,7 +88,7 @@ export class AppRepository {
             nextCursor: apps.length > 0 ? apps[apps.length - 1]?.id : undefined,
             prevCursor: apps.length > 0 ? apps[0]?.id : undefined,
             total: count,
-        } as PaginatedResult<App>;
+        } as IPaginatedResult<App>;
     }
 
     async updateStatus(id: string, isActive: boolean): Promise<App> {
