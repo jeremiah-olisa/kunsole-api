@@ -27,21 +27,23 @@ enum PlanType {
   PREMIUM
 }
 
-enum AppUserRole {
-  ADMIN
-  DEVELOPER
-  VIEWER
-}
-
 enum UserRole {
   ADMIN
   USER
+}
+
+enum AppUserRole {
+  OWNER
+  ADMIN
+  DEVELOPER
+  VIEWER
 }
 
 model App {
   id            String         @id @default(auto()) @map("_id") @db.ObjectId
   publicKey     String         @unique
   secretKey     String         @unique // Hashed with bcrypt
+  description   String?
   name          String
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
