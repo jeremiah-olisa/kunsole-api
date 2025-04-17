@@ -11,11 +11,11 @@ import * as hpp from 'hpp';
 import * as bodyParser from 'body-parser';
 import { NestExpressApplication } from '@nestjs/platform-express';
 
-import { AppModule } from './modules/app.module';
+import { AppModule } from './app.module';
 import { PrismaClientExceptionFilter } from 'nestjs-prisma';
 import { InternalServerExceptionFilter } from './exceptions/internalserver.exception.filter';
-import { PrismaInterceptor } from './infrastructure/prisma/prisma.interceptor';
-import { InitialiseClient } from './infrastructure/prisma/prisma.client';
+import { PrismaInterceptor } from './prisma/prisma.interceptor';
+import { InitialiseClient } from './prisma/prisma.client';
 
 export type NodePlatform = 'express' | 'fastify';
 

@@ -7,7 +7,7 @@ import {
 import { Observable } from 'rxjs';
 import { catchError } from 'rxjs/operators';
 import { PrismaClientKnownRequestError } from '@prisma/client/runtime/binary';
-import { InvalidFormException as PrismaException } from './../../exceptions/invalid.form.exception';
+import { InvalidFormException as PrismaException } from '../exceptions/invalid.form.exception';
 import { PRISMA_ERRORS } from './prisma.constant';
 
 @Injectable()
