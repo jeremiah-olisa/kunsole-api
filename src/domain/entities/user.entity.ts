@@ -1,4 +1,4 @@
-import { $Enums, User as IUser } from '@prisma/client';
+import { $Enums, User as IUser } from './../../infrastructure/prisma/client';
 
 export class User implements IUser {
   id: string;

@@ -1,4 +1,4 @@
-import { App as IApp } from '@prisma/client';
+import { App as IApp } from './../../infrastructure/prisma/client';
 
 export class App implements IApp {
   createdAt: Date;

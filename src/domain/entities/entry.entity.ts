@@ -1,4 +1,4 @@
-import { Entry as IEntry } from '@prisma/client';
+import { Entry as IEntry } from './../../infrastructure/prisma/client';
 
 export class Entry implements IEntry {
   id: string;

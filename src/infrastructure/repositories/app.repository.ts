@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
 import { IAppRepository } from '../../domain/interfaces/app.repository.interface';
-import { App } from '@prisma/client';
+import { App } from './../../infrastructure/prisma/client';
 import { v4 as uuidv4 } from 'uuid';
 import { AppWithPlanEntries } from '../../domain/entities/app.entity';
 

@@ -1,4 +1,4 @@
-import { Subscription as ISubscription } from '@prisma/client';
+import { Subscription as ISubscription } from './../../infrastructure/prisma/client';
 
 /* The class Subscriptions extends the interface ISubscription. */
 export class Subscription implements ISubscription {

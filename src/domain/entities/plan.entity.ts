@@ -1,4 +1,4 @@
-import { Plan as IPlan, $Enums } from '@prisma/client';
+import { Plan as IPlan, $Enums } from './../../infrastructure/prisma/client';
 import { JsonValue } from '@prisma/client/runtime/library';
 
 export class Plan implements IPlan {

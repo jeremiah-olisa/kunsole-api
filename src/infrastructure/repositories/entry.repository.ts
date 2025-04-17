@@ -5,7 +5,7 @@ import {
   EntryFilters,
   IEntryRepository,
 } from '../../domain/interfaces/entry.repository.interface';
-import { Prisma } from '@prisma/client';
+import { Prisma } from './../../infrastructure/prisma/client';
 
 @Injectable()
 export class EntryRepository implements IEntryRepository {

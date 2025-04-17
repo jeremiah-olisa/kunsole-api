@@ -4,7 +4,7 @@ import {
   IUserRepository,
   UserFilters,
 } from '../../domain/interfaces/user.repository.interface';
-import { User, UserRole } from '@prisma/client';
+import { User, UserRole } from './../../infrastructure/prisma/client';
 
 @Injectable()
 export class UserRepository implements IUserRepository {

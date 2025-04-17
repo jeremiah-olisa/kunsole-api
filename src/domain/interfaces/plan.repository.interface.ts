@@ -1,4 +1,4 @@
-import { Plan } from '@prisma/client';
+import { Plan } from './../../infrastructure/prisma/client';
 
 export interface IPlanRepository {
   create(planData: Omit<Plan, 'id' | 'createdAt' | 'updatedAt'>): Promise<Plan>;
