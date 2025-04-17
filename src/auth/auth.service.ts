@@ -2,7 +2,6 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { AuthProvider, User } from 'src/infrastructure/prisma/client';
-import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import crypto from 'crypto';
 import { IUserRepository } from 'src/domain/interfaces/user.repository.interface';
 import { LoginResponseDto } from './dto/login-response.dto';

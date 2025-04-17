@@ -9,7 +9,7 @@ import { AuthController } from './auth.controller';
 // import { UserService } from '../application/services/user.service';
 import { GoogleStrategy } from './strategies/google.strategy';
 import { GithubStrategy } from './strategies/github.strategy';
-import { PrismaService } from 'nestjs-prisma';
+import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 
 @Module({
   imports: [

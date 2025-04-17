@@ -2,7 +2,7 @@
 import { Injectable } from '@nestjs/common';
 import * as bcrypt from 'bcrypt';
 import { IUserRepository, UserFilters } from 'src/domain/interfaces/user.repository.interface';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { User, UserRole } from '../prisma/client';
 
 @Injectable()
@@ -27,8 +27,8 @@ export class UserRepository implements IUserRepository {
   async findByExternalId(appId: string, externalUserId: string): Promise<User | null> {
     return this.prisma.user.findFirst({
       where: {
-        appId,
-        externalUserId,
+        userApp: { some: { appId } },
+        userKey: externalUserId,
       },
     });
   }
@@ -77,16 +77,19 @@ export class UserRepository implements IUserRepository {
   }
 
   async countUsersByApp(appId: string): Promise<number> {
-    return this.prisma.user.count({
+    return this.prisma.userApp.count({
       where: { appId },
     });
   }
 
   async updateRole(userId: string, role: UserRole): Promise<User> {
-    return this.prisma.user.update({
+    var result = await this.prisma.userApp.update({
       where: { id: userId },
       data: { role },
+      select: { user: true }
     });
+
+    return result.user;
   }
 
   async findOrCreate(userData: Omit<User, 'id' | 'createdAt' | 'updatedAt'>): Promise<User> {

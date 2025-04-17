@@ -15,6 +15,7 @@ import { AppModule } from './modules/app.module';
 import { PrismaClientExceptionFilter } from 'nestjs-prisma';
 import { InternalServerExceptionFilter } from './exceptions/internalserver.exception.filter';
 import { PrismaInterceptor } from './infrastructure/prisma/prisma.interceptor';
+import { InitialiseClient } from './infrastructure/prisma/prisma.client';
 
 export type NodePlatform = 'express' | 'fastify';
 
@@ -101,6 +102,8 @@ async function bootstrap() {
   const app = await createApp();
 
   const port = process.env.PORT || process.env.APP_PORT || 8000;
+
+  InitialiseClient();
 
   await app.listen(port, async () => {
     console.info(

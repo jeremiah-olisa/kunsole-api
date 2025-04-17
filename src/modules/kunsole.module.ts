@@ -1,5 +1,5 @@
 import { Module } from '@nestjs/common';
-import { PrismaService } from '../infrastructure/prisma/prisma.service';
+import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { EntriesController } from '../presentation/controllers/entries.controller';
 import { KunsoleService } from '../application/services/kunsole.service';
 import { EntryRepository } from '../infrastructure/repositories/entry.repository';
@@ -12,9 +12,10 @@ import { SubscriptionService } from '../application/services/subscription.servic
 import { SubscriptionRepository } from '../infrastructure/repositories/subscription.repository';
 import { PlanRepository } from '../infrastructure/repositories/plan.repository';
 import { UserRepository } from '../infrastructure/repositories/user.repository';
+import { AuthModule } from './../auth/auth.module';
 
 @Module({
-  imports: [],
+  imports: [AuthModule],
   controllers: [
     EntriesController,
     AppController,

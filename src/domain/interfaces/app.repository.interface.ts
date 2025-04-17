@@ -1,12 +1,34 @@
-import { Prisma } from 'src/infrastructure/prisma/client';
-import { App, AppWithPlanEntries } from '../entities/app.entity';
+import { App, Plan } from './../../infrastructure/prisma/client';
+
+export type AppWithPlan = App & { plan: Plan };
 
 export interface IAppRepository {
-  findByPublicKey(publicKey: string): Promise<App>;
-  validateAppApiKey(key: string): Promise<AppWithPlanEntries | null>;
-  validateAppApiKeyOrThrow(key: string): Promise<AppWithPlanEntries>;
-  isApiKeyValid(key: string): Promise<boolean>;
-  createApp(app: Prisma.XOR<Prisma.AppCreateInput, Prisma.AppUncheckedCreateInput>): Promise<App>;
-  findById(id: string): Promise<App | null>;
-  update(appId: string, data: Partial<App>): Promise<void>;
+  // Key-based authentication methods
+  findByPublicKey(publicKey: string): Promise<AppWithPlan | null>;
+  validateAppCredentials(
+    publicKey: string,
+    secretKey: string
+  ): Promise<AppWithPlan | null>;
+  validateAppCredentialsOrThrow(
+    publicKey: string,
+    secretKey: string
+  ): Promise<AppWithPlan>;
+  areCredentialsValid(publicKey: string, secretKey: string): Promise<boolean>;
+
+  // App management
+  createApp(data: {
+    name: string;
+    planId: string;
+  }): Promise<{ app: App; secretKey: string }>;
+  findById(id: string): Promise<AppWithPlan | null>;
+  update(
+    appId: string,
+    data: Partial<App> & { secretKey?: string }
+  ): Promise<App>;
+
+  // Additional methods
+  rotateKeys(appId: string): Promise<{ publicKey: string; secretKey: string }>;
+  deactivateApp(appId: string): Promise<App>;
+  activateApp(appId: string): Promise<App>;
+  countActiveApps(): Promise<number>;
 }

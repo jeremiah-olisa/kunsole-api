@@ -10,38 +10,38 @@ export class KunsoleService {
     @Inject('IAppRepository') private readonly appRepository: IAppRepository,
   ) { }
 
-  async logEntry(
-    entry: Omit<Entry, 'id' | 'createdAt' | 'readAt' | 'markAsRead'>,
-  ): Promise<Entry> {
-    const app = await this.appRepository.validateAppApiKeyOrThrow(entry.appId);
+  // async logEntry(
+  //   entry: Omit<Entry, 'id' | 'createdAt' | 'readAt' | 'markAsRead'>,
+  // ): Promise<Entry> {
+  //   const app = await this.appRepository.validateAppApiKeyOrThrow(entry.appId);
 
-    // Check entry limits against app's plan
-    const entriesCount = await this.entryRepository.countRecentEntries(app.id);
-    if (app.plan.maxEntries > 0 && entriesCount >= app.plan.maxEntries) {
-      throw new BadRequestException('Entry limit reached for current plan');
-    }
+  //   // Check entry limits against app's plan
+  //   const entriesCount = await this.entryRepository.countRecentEntries(app.id);
+  //   if (app.plan.maxEntries > 0 && entriesCount >= app.plan.maxEntries) {
+  //     throw new BadRequestException('Entry limit reached for current plan');
+  //   }
 
-    const newEntry = new Entry({
-      ...entry,
-      appId: app.id,
-    });
-    return this.entryRepository.createEntry(newEntry);
-  }
+  //   const newEntry = new Entry({
+  //     ...entry,
+  //     appId: app.id,
+  //   });
+  //   return this.entryRepository.createEntry(newEntry);
+  // }
 
-  async getEntriesForUser(userId: string, filters?: any): Promise<Entry[]> {
-    return this.entryRepository.findEntriesByUserId(userId, filters);
-  }
+  // async getEntriesForUser(userId: string, filters?: any): Promise<Entry[]> {
+  //   return this.entryRepository.findEntriesByUserId(userId, filters);
+  // }
 
-  async findEntriesByAppKey(appKey: string, filters?: any): Promise<Entry[]> {
-    var isValid = await this.appRepository.isApiKeyValid(appKey);
+  // async findEntriesByAppKey(appKey: string, filters?: any): Promise<Entry[]> {
+  //   var isValid = await this.appRepository.isApiKeyValid(appKey);
 
-    if (!isValid)
-      throw new BadRequestException('Invalid Api Key');
+  //   if (!isValid)
+  //     throw new BadRequestException('Invalid Api Key');
 
-    return this.entryRepository.findEntriesByAppKey(appKey, filters);
-  }
+  //   return this.entryRepository.findEntriesByAppKey(appKey, filters);
+  // }
 
-  async markEntryAsRead(entryId: string): Promise<Entry> {
-    return this.entryRepository.markEntryAsRead(entryId);
-  }
+  // async markEntryAsRead(entryId: string): Promise<Entry> {
+  //   return this.entryRepository.markEntryAsRead(entryId);
+  // }
 }

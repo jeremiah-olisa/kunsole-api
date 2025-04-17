@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { PrismaService } from '../prisma/prisma.service';
+import { PrismaService } from 'src/infrastructure/prisma/prisma.service';
 import { ISubscriptionRepository } from 'src/domain/interfaces/subscription.repository.interface';
 import { Subscription } from 'src/domain/entities/subscription.entity';
 
@@ -20,7 +20,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
   async findActiveSubscription(appId: string): Promise<Subscription | null> {
     return this.prisma.subscription.findFirst({
       where: {
-        app: { OR: [{ apiKey: appId }, { id: appId }] },
+        app: { OR: [{ publicKey: appId }, { id: appId }] },
         isActive: true,
         endsAt: { gt: new Date() }, // Subscription hasn't expired
       },
@@ -32,7 +32,7 @@ export class SubscriptionRepository implements ISubscriptionRepository {
   async getAppLastSubscriptionStartDate(appId: string): Promise<Date | null> {
     const lastSubscription = await this.prisma.subscription.findFirst({
       where: {
-        app: { OR: [{ apiKey: appId }, { id: appId }] },
+        app: { OR: [{ publicKey: appId }, { id: appId }] },
       },
       orderBy: { startsAt: 'desc' },
       select: { startsAt: true },
