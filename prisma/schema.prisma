@@ -1,0 +1,110 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "mongodb"
+  url      = env("DATABASE_URL")
+}
+
+model App {
+  id            String         @id @default(auto()) @map("_id") @db.ObjectId
+  apiKey        String         @unique
+  name          String
+  createdAt     DateTime       @default(now())
+  updatedAt     DateTime       @updatedAt
+  isActive      Boolean        @default(true)
+  planId        String         @db.ObjectId
+  plan          Plan           @relation(fields: [planId], references: [id])
+  users         User[]
+  subscriptions Subscription[]
+  entries       Entry[]
+}
+
+model User {
+  id             String         @id @default(auto()) @map("_id") @db.ObjectId
+  appId          String         @db.ObjectId
+  app            App            @relation(fields: [appId], references: [id])
+  externalUserId String
+  email          String
+  fullName       String
+  password       String
+  profileImage   String?
+  role           UserRole       @default(DEVELOPER)
+  permissions    String[]       @default([])
+  entries        Entry[]
+  createdAt      DateTime       @default(now())
+  updatedAt      DateTime       @updatedAt
+  isActive       Boolean        @default(true)
+  lastLogin      DateTime?
+  Subscription   Subscription[]
+
+  @@unique([appId, externalUserId])
+}
+
+model Entry {
+  id        String    @id @default(auto()) @map("_id") @db.ObjectId
+  type      EntryType
+  content   String
+  metadata  Json?
+  userId    String    @db.ObjectId
+  user      User      @relation(fields: [userId], references: [id])
+  appId     String    @db.ObjectId
+  app       App       @relation(fields: [appId], references: [id])
+  createdAt DateTime  @default(now())
+  readAt    DateTime?
+
+  @@index([appId])
+  @@index([userId])
+}
+
+enum EntryType {
+  EMAIL
+  SMS
+  TERMINAL
+}
+
+enum PlanType {
+  FREE
+  BASIC
+  GOLD
+  PREMIUM
+}
+
+model Plan {
+  id                 String         @id @default(auto()) @map("_id") @db.ObjectId
+  type               PlanType
+  name               String
+  description        String
+  price              Float
+  maxApps            Int
+  maxUsers           Int
+  entryRetentionDays Int // 0 means no retention (immediate deletion)
+  maxEntries         Int // 0 means unlimited
+  features           Json // Additional features as JSON
+  createdAt          DateTime       @default(now())
+  updatedAt          DateTime       @updatedAt
+  apps               App[]
+  subscritions       Subscription[]
+}
+
+model Subscription {
+  id        String   @id @default(auto()) @map("_id") @db.ObjectId
+  planId    String   @db.ObjectId
+  plan      Plan     @relation(fields: [planId], references: [id])
+  userId    String   @db.ObjectId
+  user      User     @relation(fields: [userId], references: [id])
+  appId     String   @db.ObjectId
+  app       App      @relation(fields: [appId], references: [id])
+  startsAt  DateTime
+  endsAt    DateTime
+  isActive  Boolean  @default(true)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum UserRole {
+  ADMIN
+  DEVELOPER
+  VIEWER
+}
