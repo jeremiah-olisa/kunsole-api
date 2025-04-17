@@ -1,11 +1,10 @@
-import { UserRole } from './../../infrastructure/prisma/client';
-import { User } from '../entities/user.entity';
+import { User, UserRole } from './../../infrastructure/prisma/client';
 
 export interface UserFilters {
   role?: UserRole;
   searchTerm?: string;
-  page?: number;
-  limit?: number;
+  skip?: number;
+  take?: number;
 }
 
 export interface IUserRepository {
@@ -20,7 +19,6 @@ export interface IUserRepository {
   updateRole(userId: string, role: UserRole): Promise<User>;
   findOrCreate(
     userData: Omit<User, 'id' | 'createdAt' | 'updatedAt'>,
-    externalUserId: string,
-    apiKey: string,
   ): Promise<User>;
+  comparePassword(plainTextPassword: string, hashedPassword: string): Promise<boolean>;
 }

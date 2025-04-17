@@ -4,7 +4,6 @@ export class App implements IApp {
   createdAt: Date;
   name: string;
   id: string;
-  apiKey: string;
   updatedAt: Date;
   isActive: boolean;
   planId: string;
@@ -13,6 +12,8 @@ export class App implements IApp {
     Object.assign(this, partial);
     this.createdAt = this.createdAt || new Date();
   }
+  publicKey: string;
+  secretKey: string;
 }
 
 export interface AppWithPlanEntries {

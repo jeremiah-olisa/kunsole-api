@@ -1,4 +1,4 @@
-import { Prisma } from './../../infrastructure/prisma/client';
+import { Prisma } from '@prisma/client';
 
 export const PRISMA_ERRORS = {
     P1000:

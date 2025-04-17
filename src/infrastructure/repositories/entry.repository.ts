@@ -9,14 +9,14 @@ import { Prisma } from './../../infrastructure/prisma/client';
 
 @Injectable()
 export class EntryRepository implements IEntryRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async findEntriesByAppKey(
     appKey: string,
     filters?: EntryFilters,
   ): Promise<Entry[]> {
     const where = this.filterEntries(filters, {
-      app: { OR: [{ id: appKey }, { apiKey: appKey }] },
+      app: { OR: [{ id: appKey }, { publicKey: appKey }] },
     });
 
     const entries = await this.prisma.entry.findMany({
@@ -84,9 +84,7 @@ export class EntryRepository implements IEntryRepository {
     filters?: EntryFilters,
   ): Promise<Entry[]> {
     const where = this.filterEntries(filters, {
-      app: {
-        users: { some: { OR: [{ id: userId, externalUserId: userId }] } },
-      },
+      app: { userApp: { some: { userId } } },
     });
 
     const entries = await this.prisma.entry.findMany({

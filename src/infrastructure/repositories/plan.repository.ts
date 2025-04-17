@@ -1,11 +1,11 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from '../prisma/prisma.service';
-import { Plan, PlanType } from './../../infrastructure/prisma/client';
 import { IPlanRepository } from '../../domain/interfaces/plan.repository.interface';
+import { Plan, PlanType } from '../prisma/client';
 
 @Injectable()
 export class PlanRepository implements IPlanRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async create(
     planData: Omit<Plan, 'id' | 'createdAt' | 'updatedAt'>,

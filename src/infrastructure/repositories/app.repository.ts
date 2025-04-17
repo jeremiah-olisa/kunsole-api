@@ -4,10 +4,17 @@ import { IAppRepository } from '../../domain/interfaces/app.repository.interface
 import { App } from './../../infrastructure/prisma/client';
 import { v4 as uuidv4 } from 'uuid';
 import { AppWithPlanEntries } from '../../domain/entities/app.entity';
+import { Prisma } from '../prisma/client';
 
 @Injectable()
 export class AppRepository implements IAppRepository {
   constructor(private readonly prisma: PrismaService) { }
+  findByPublicKey(publicKey: string): Promise<App> {
+    throw new Error('Method not implemented.');
+  }
+  update(appId: string, data: Partial<App>): Promise<void> {
+    throw new Error('Method not implemented.');
+  }
 
   async validateAppApiKey(key: string): Promise<AppWithPlanEntries | null> {
     const app = await this.prisma.app.findFirst({
@@ -41,13 +48,9 @@ export class AppRepository implements IAppRepository {
     return app > 0;
   }
 
-  async createApp(name: string, planId: string): Promise<App> {
+  async createApp(data: Prisma.XOR<Prisma.AppCreateInput, Prisma.AppUncheckedCreateInput>): Promise<App> {
     return this.prisma.app.create({
-      data: {
-        name,
-        apiKey: `app_${uuidv4()}`,
-        planId,
-      },
+      data
     });
   }
 

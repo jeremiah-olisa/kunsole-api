@@ -1,46 +1,19 @@
+// src/infrastructure/repositories/user.repository.ts
 import { Injectable } from '@nestjs/common';
+import * as bcrypt from 'bcrypt';
+import { IUserRepository, UserFilters } from 'src/domain/interfaces/user.repository.interface';
 import { PrismaService } from '../prisma/prisma.service';
-import {
-  IUserRepository,
-  UserFilters,
-} from '../../domain/interfaces/user.repository.interface';
-import { User, UserRole } from './../../infrastructure/prisma/client';
+import { User, UserRole } from '../prisma/client';
 
 @Injectable()
 export class UserRepository implements IUserRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
-  async findOrCreate(
-    userData: Omit<User, 'id' | 'createdAt' | 'updatedAt'>,
-    externalUserId: string,
-    apiKey: string,
-  ): Promise<User> {
-    const existingUser = await this.prisma.user.findFirst({
-      where: { externalUserId, app: { apiKey: apiKey } },
-    });
-
-    if (existingUser) {
-      return existingUser;
-    }
-
+  async create(userData: Omit<User, 'id' | 'createdAt' | 'updatedAt'>): Promise<User> {
     return this.prisma.user.create({
       data: {
         ...userData,
-        externalUserId,
-        app: { connect: { apiKey } },
-        permissions: [],
-        appId: undefined, // Ensure appId is not included
-      },
-    });
-  }
-
-  async create(
-    userData: Omit<User, 'id' | 'createdAt' | 'updatedAt'>,
-  ): Promise<User> {
-    return this.prisma.user.create({
-      data: {
-        ...userData,
-        permissions: userData.permissions || [],
+        password: userData.password ? await this.hashPassword(userData.password) : undefined,
       },
     });
   }
@@ -48,14 +21,10 @@ export class UserRepository implements IUserRepository {
   async findById(id: string): Promise<User | null> {
     return this.prisma.user.findUnique({
       where: { id },
-      include: { app: true },
     });
   }
 
-  async findByExternalId(
-    appId: string,
-    externalUserId: string,
-  ): Promise<User | null> {
+  async findByExternalId(appId: string, externalUserId: string): Promise<User | null> {
     return this.prisma.user.findFirst({
       where: {
         appId,
@@ -65,18 +34,18 @@ export class UserRepository implements IUserRepository {
   }
 
   async findByEmail(email: string): Promise<User | null> {
-    return this.prisma.user.findFirst({
+    return this.prisma.user.findUnique({
       where: { email },
     });
   }
 
   async update(id: string, updates: Partial<User>): Promise<User> {
+    if (updates.password) {
+      updates.password = await this.hashPassword(updates.password);
+    }
     return this.prisma.user.update({
       where: { id },
-      data: {
-        ...updates,
-        updatedAt: new Date(),
-      },
+      data: updates,
     });
   }
 
@@ -93,25 +62,17 @@ export class UserRepository implements IUserRepository {
       if (filters.role) where.role = filters.role;
       if (filters.searchTerm) {
         where.OR = [
-          {
-            externalUserId: {
-              contains: filters.searchTerm,
-              mode: 'insensitive',
-            },
-          },
           { email: { contains: filters.searchTerm, mode: 'insensitive' } },
+          { fullName: { contains: filters.searchTerm, mode: 'insensitive' } },
         ];
       }
     }
 
-    const take = filters?.limit || 10;
-    const skip = filters?.page ? (filters.page - 1) * take : 0;
-
     return this.prisma.user.findMany({
       where,
-      skip,
-      take,
       orderBy: { createdAt: 'desc' },
+      skip: filters?.skip,
+      take: filters?.take,
     });
   }
 
@@ -126,5 +87,20 @@ export class UserRepository implements IUserRepository {
       where: { id: userId },
       data: { role },
     });
+  }
+
+  async findOrCreate(userData: Omit<User, 'id' | 'createdAt' | 'updatedAt'>): Promise<User> {
+    const existingUser = await this.findByEmail(userData.email);
+    if (existingUser) return existingUser;
+
+    return this.create(userData);
+  }
+
+  async comparePassword(plainTextPassword: string, hashedPassword: string): Promise<boolean> {
+    return bcrypt.compare(plainTextPassword, hashedPassword);
+  }
+
+  private async hashPassword(password: string): Promise<string> {
+    return bcrypt.hash(password, 12);
   }
 }
