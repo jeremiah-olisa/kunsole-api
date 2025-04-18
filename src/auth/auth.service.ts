@@ -2,7 +2,6 @@ import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { AuthRepository } from './auth.repository';
-import { UserEntity } from '../user/entities/user.entity';
 import { AuthProvider, User } from '@prisma/client';
 import { OAuthUserPayload } from './interfaces/auth.interface';
 import { Request } from 'express';

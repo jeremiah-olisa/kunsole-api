@@ -111,6 +111,8 @@ model Entry {
   appId     String    @db.ObjectId
   app       App       @relation(fields: [appId], references: [id])
   createdAt DateTime  @default(now())
+  updatedAt DateTime  @updatedAt
+  loggedAt  DateTime
   readAt    DateTime?
 
   @@index([appId])

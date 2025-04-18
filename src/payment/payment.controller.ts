@@ -50,6 +50,7 @@ export class PaymentController {
         @Query() pagination: any,
         @Req() req: Request,
     ) {
+        
         return this.paymentService.getAppPayments(appId, req.user.id, pagination);
     }
 }

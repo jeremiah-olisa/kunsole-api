@@ -77,13 +77,15 @@ export class PaymentQuery implements PaymentFilters, KeysetPaginationParams {
     })
     direction: KeysetPaginationDirection;
 
-    getFilters() {
-        return {
-            appId: this.appId,
-            provider: this.provider,
-            status: this.status,
-            userId: this.userId
-        } as PaymentFilters;
+    getFilters(): PaymentFilters {
+        const {
+            getFilters,
+            getPagination, cursor,
+            limit,
+            direction, ...filters } = this;
+
+        return filters;
+
     }
 
     getPagination(): KeysetPaginationParams {

@@ -6,6 +6,7 @@ import { PlanModule } from './plan/plan.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { PaymentModule } from './payment/payment.module';
 import { UserAppModule } from './user-app/user-app.module';
+import { EntryModule } from './entry/entry.module';
 
 @Module({
   imports: [
@@ -18,6 +19,7 @@ import { UserAppModule } from './user-app/user-app.module';
     PlanModule,
     SubscriptionModule,
     PaymentModule,
+    EntryModule,
   ],
   providers: [],
 })

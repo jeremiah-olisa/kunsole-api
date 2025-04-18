@@ -13,7 +13,7 @@ import {
 import { AppService } from './app.service';
 import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { Request } from 'express';
-import { UserEntity } from '../user/entities/user.entity';
+import { UserEntity } from '../auth/entities/user.entity';
 import {
   ApiBearerAuth,
   ApiBody,
@@ -79,8 +79,8 @@ export class AppController {
     @Req() req: Request,
     @Query() query: KeysetPaginationParams,
   ): Promise<IPaginatedResult<AppEntity>> {
-    const user = req.user as UserEntity;
-    return this.appService.getUserApps(user.id, query);
+    const user = new UserEntity(req.user);
+    return this.appService.getUserApps(user.getUserId(), query);
   }
 
   @Get(':id')
