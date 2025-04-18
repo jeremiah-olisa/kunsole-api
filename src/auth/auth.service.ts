@@ -82,10 +82,6 @@ export class AuthService {
         return null;
     }
 
-    async validateUserById(userId: string): Promise<User | null> {
-        return this.authRepository.findUserById(userId);
-    }
-
     async validateUserByUserKey(userKey: string): Promise<User | null> {
         return this.authRepository.findUserByUserKey(userKey);
     }
