@@ -5,6 +5,7 @@ import { AppModule as KunsoleApp } from './app/app.module';
 import { PlanModule } from './plan/plan.module';
 import { SubscriptionModule } from './subscription/subscription.module';
 import { PaymentModule } from './payment/payment.module';
+import { UserAppModule } from './user-app/user-app.module';
 
 @Module({
   imports: [
@@ -13,6 +14,7 @@ import { PaymentModule } from './payment/payment.module';
     }),
     AuthModule,
     KunsoleApp,
+    UserAppModule,
     PlanModule,
     SubscriptionModule,
     PaymentModule,

@@ -7,14 +7,14 @@ import { AppRepository } from './repositories/app.repository';
 import { AppEntity } from './entities/app.entity/app.entity';
 import { CreateAppDto } from './dtos/create-app.dto/create-app.dto';
 import { UpdateAppDto } from './dtos/update-app.dto/update-app.dto';
-import { UserAppRepository } from 'src/user-app/user-app.repository';
 import { PlanRepository } from 'src/plan/repositories/plan.repository';
+import { UserAppService } from 'src/user-app/user-app.service';
 
 @Injectable()
 export class AppService {
     constructor(
         private readonly appRepository: AppRepository,
-        private readonly userAppRepository: UserAppRepository,
+        private readonly userAppService: UserAppService,
         private readonly planRepository: PlanRepository,
     ) { }
 
@@ -32,7 +32,7 @@ export class AppService {
                 plan: { connect: { id: createAppDto.planId } },
             });
 
-            await this.userAppRepository.createUserApp(
+            await this.userAppService.create(
                 {
                     appId: app.id,
                     userId,
