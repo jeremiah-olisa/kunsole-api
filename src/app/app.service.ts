@@ -7,15 +7,15 @@ import { AppRepository } from './repositories/app.repository';
 import { AppEntity } from './entities/app.entity/app.entity';
 import { CreateAppDto } from './dtos/create-app.dto/create-app.dto';
 import { UpdateAppDto } from './dtos/update-app.dto/update-app.dto';
-import { PlanRepository } from 'src/plan/repositories/plan.repository';
 import { UserAppService } from 'src/user-app/user-app.service';
+import { PlanService } from 'src/plan/plan.service';
 
 @Injectable()
 export class AppService {
     constructor(
         private readonly appRepository: AppRepository,
         private readonly userAppService: UserAppService,
-        private readonly planRepository: PlanRepository,
+        private readonly planService: PlanService,
     ) { }
 
     async createApp(createAppDto: CreateAppDto, userId: string): Promise<AppEntity> {
@@ -115,12 +115,6 @@ export class AppService {
 
         const updatedApp = await this.appRepository.updateStatus(id, !app.isActive);
         return new AppEntity(updatedApp);
-    }
-
-    private async getFreePlanId(): Promise<string> {
-        const freePlan = await this.planRepository.findPlanByType($Enums.PlanType.FREE);
-        if (!freePlan) throw new NotFoundException('Free plan not found');
-        return freePlan.id;
     }
 
     private async verifyUserAccess(

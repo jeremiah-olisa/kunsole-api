@@ -1,15 +1,13 @@
 import { Injectable } from '@nestjs/common';
-import { Prisma, App, AppUserRole, $Enums } from '@prisma/client';
+import { Prisma, App, AppUserRole } from '@prisma/client';
 import { IKeysetPaginationParams, IPaginatedResult } from '../../common/interfaces/pagination.interface';
 import * as bcrypt from 'bcrypt';
 import { PrismaService } from 'nestjs-prisma';
+import { PAGINATION_SIZE_DEFAULT_LIMIT, PAGINATION_SIZE_MAX_LIMIT } from 'src/common/constants/pagination.constant';
 
 @Injectable()
 export class AppRepository {
     constructor(private readonly prisma: PrismaService) { }
-
-    private readonly DEFAULT_LIMIT = 20;
-    private readonly MAX_LIMIT = 100;
 
     async $transaction<T>(fn: (tx: Prisma.TransactionClient) => Promise<T>) {
         return this.prisma.$transaction(fn);
@@ -53,7 +51,7 @@ export class AppRepository {
         userId: string,
         pagination?: IKeysetPaginationParams,
     ): Promise<IPaginatedResult<App>> {
-        const limit = Math.min(pagination?.limit || this.DEFAULT_LIMIT, this.MAX_LIMIT);
+    const limit = Math.min(pagination?.limit || PAGINATION_SIZE_DEFAULT_LIMIT, PAGINATION_SIZE_MAX_LIMIT);
         const direction = pagination?.direction || 'forward';
         const cursor = pagination?.cursor
             ? { id: pagination.cursor }

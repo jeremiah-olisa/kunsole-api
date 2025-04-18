@@ -21,10 +21,8 @@ enum EntryType {
 }
 
 enum PlanType {
-  FREE
-  BASIC
-  GOLD
-  PREMIUM
+  SYSTEM
+  CUSTOM
 }
 
 enum UserRole {
