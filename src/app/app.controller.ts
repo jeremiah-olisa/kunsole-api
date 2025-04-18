@@ -56,7 +56,8 @@ export class AppController {
     @Body() createAppDto: CreateAppDto,
     @Req() req: Request,
   ): Promise<AppEntity> {
-    const user = req.user as UserEntity;
+    const user = new UserEntity(req.user);
+
     return this.appService.createApp(createAppDto, user.id);
   }
 
@@ -99,7 +100,8 @@ export class AppController {
     @Param('id') id: string,
     @Req() req: Request,
   ): Promise<AppEntity> {
-    const user = req.user as UserEntity;
+    const user = new UserEntity(req.user);
+
     return this.appService.getAppById(id, user.id);
   }
 
@@ -121,7 +123,8 @@ export class AppController {
     @Body() updateAppDto: UpdateAppDto,
     @Req() req: Request,
   ): Promise<AppEntity> {
-    const user = req.user as UserEntity;
+    const user = new UserEntity(req.user);
+
     return this.appService.updateApp(id, updateAppDto, user.id);
   }
 
@@ -141,7 +144,8 @@ export class AppController {
     @Param('id') id: string,
     @Req() req: Request,
   ): Promise<void> {
-    const user = req.user as UserEntity;
+    const user = new UserEntity(req.user);
+
     return this.appService.deleteApp(id, user.id);
   }
 
@@ -164,7 +168,8 @@ export class AppController {
     @Param('id') id: string,
     @Req() req: Request,
   ): Promise<AppEntity> {
-    const user = req.user as UserEntity;
+    const user = new UserEntity(req.user);
+
     return this.appService.rotateApiKeys(id, user.id);
   }
 
@@ -187,7 +192,8 @@ export class AppController {
     @Param('id') id: string,
     @Req() req: Request,
   ): Promise<AppEntity> {
-    const user = req.user as UserEntity;
+    const user = new UserEntity(req.user);
+
     return this.appService.toggleAppStatus(id, user.id);
   }
 }

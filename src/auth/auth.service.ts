@@ -8,6 +8,7 @@ import { Request } from 'express';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { RegisterDto } from './dtos/register.dto';
 import { TokenDto } from './dtos/token.dto';
+import { UserEntity } from './entities/user.entity';
 
 @Injectable()
 export class AuthService {
@@ -29,26 +30,26 @@ export class AuthService {
         return this.generateTokens(user);
     }
 
-    async googleLogin(req: Request): Promise<TokenDto> {
-        if (!req.user) {
+    async googleLogin(userEntity: UserEntity): Promise<TokenDto> {
+        if (!userEntity) {
             throw new UnauthorizedException('No user from Google');
         }
 
         const user = await this.authRepository.findOrCreateOAuthUser(
-            req.user as OAuthUserPayload,
+            userEntity as OAuthUserPayload,
             AuthProvider.GOOGLE,
         );
 
         return this.generateTokens(user);
     }
 
-    async githubLogin(req: Request): Promise<TokenDto> {
-        if (!req.user) {
+    async githubLogin(userEntity: UserEntity): Promise<TokenDto> {
+        if (!userEntity) {
             throw new UnauthorizedException('No user from GitHub');
         }
 
         const user = await this.authRepository.findOrCreateOAuthUser(
-            req.user as OAuthUserPayload,
+            userEntity as OAuthUserPayload,
             AuthProvider.GITHUB,
         );
 

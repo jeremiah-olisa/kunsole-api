@@ -3,10 +3,9 @@ import { PaymentService } from './payment.service';
 import { ApiTags, ApiOperation, ApiBearerAuth, ApiQuery, ApiResponse } from '@nestjs/swagger';
 import { SwaggerAuthenticated } from 'src/auth/decorators/swagger-auth.decorator';
 import { Request } from 'express';
-import { KeysetPaginationParams } from 'src/common/entities/pagination.entity';
-import { Public } from 'src/auth/decorators/public.decorator';
 import { PaginatedResultPaymentEntity } from './entities/payment.entity';
 import { PaymentQuery } from './interfaces';
+import { UserEntity } from 'src/auth/entities/user.entity';
 
 @ApiTags('Payments')
 @Controller('payments')
@@ -32,7 +31,9 @@ export class PaymentController {
         @Query() query: PaymentQuery,
         @Req() req: Request,
     ) {
-        return this.paymentService.getUserPayments(req.user.id, query.getFilters(), query.getPagination());
+        const user = new UserEntity(req.user);
+
+        return this.paymentService.getUserPayments(user.getUserId(), query.getFilters(), query.getPagination());
     }
 
     @Get('app/:appId')
@@ -50,7 +51,11 @@ export class PaymentController {
         @Query() pagination: any,
         @Req() req: Request,
     ) {
-        
-        return this.paymentService.getAppPayments(appId, req.user.id, pagination);
+        const user = new UserEntity(req.user);
+
+        return this.paymentService.getAppPayments(appId, {
+            ...pagination,
+            userId: user.getUserId()
+        }, pagination);
     }
 }

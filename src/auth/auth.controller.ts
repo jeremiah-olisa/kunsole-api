@@ -54,7 +54,7 @@ export class AuthController {
     @ApiResponse({ status: 200, description: 'Google login successful', type: TokenDto })
     @HttpCode(200)
     async googleAuth(@Req() req: Request): Promise<TokenDto> {
-        return await this.authService.googleLogin(req);
+        return await this.authService.googleLogin(req.user);
     }
 
     @Public()
@@ -63,7 +63,7 @@ export class AuthController {
     @ApiResponse({ status: 200, description: 'GitHub login successful', type: TokenDto })
     @HttpCode(200)
     async githubAuth(@Req() req: Request): Promise<TokenDto> {
-        return await this.authService.githubLogin(req);
+        return await this.authService.githubLogin(req.user);
     }
 
     @Post('refresh')
