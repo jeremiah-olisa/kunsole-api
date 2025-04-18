@@ -161,7 +161,7 @@ model Subscription {
   user      User      @relation(fields: [userId], references: [id])
   paymentId String?   @unique @db.ObjectId
   payment   Payment?  @relation(fields: [paymentId], references: [id])
-  startsAt  DateTime
+  startsAt  DateTime?
   endsAt    DateTime?
   isActive  Boolean   @default(false)
   isQueued  Boolean   @default(false)

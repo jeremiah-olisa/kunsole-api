@@ -77,12 +77,10 @@ export class AppController {
   })
   async findAll(
     @Req() req: Request,
-    @Query('cursor') cursor?: string,
-    @Query('limit') limit?: number,
-    @Query('direction') direction?: 'forward' | 'backward',
+    @Query() query: KeysetPaginationParams,
   ): Promise<IPaginatedResult<AppEntity>> {
     const user = req.user as UserEntity;
-    return this.appService.getUserApps(user.id, { cursor, limit, direction });
+    return this.appService.getUserApps(user.id, query);
   }
 
   @Get(':id')

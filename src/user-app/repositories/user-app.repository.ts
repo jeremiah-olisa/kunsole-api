@@ -106,4 +106,41 @@ export class UserAppRepository {
     };
   }
 
+  async findByUserAndApp(
+    userId: string,
+    appId: string,
+    tx?: PrismaClientTransaction,
+    isActive = true,
+  ) {
+    const client = tx || this.prisma;
+    return client.userApp.findFirst({
+      where: {
+        userId,
+        appId,
+        isActive,
+      },
+      select: {
+        role: true,
+        user: { select: { email: true } }
+      },
+    });
+  }
+
+  async userHasAccessToApp(
+    userId: string,
+    appId: string,
+    tx?: PrismaClientTransaction,
+    isActive = true,
+  ) {
+    const client = tx || this.prisma;
+    return (await client.userApp.count({
+      where: {
+        userId,
+        appId,
+        isActive,
+      },
+    })) > 0;
+  }
+
+
 }

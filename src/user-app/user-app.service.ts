@@ -1,4 +1,4 @@
-import { Injectable } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { UserAppRepository } from './repositories/user-app.repository';
 import { CreateUserAppDto } from './dtos/create-user-app.dto';
 import { UpdateUserAppDto } from './dtos/update-user-app.dto';
@@ -43,6 +43,19 @@ export class UserAppService {
 
     async remove(appId: string, userId: string): Promise<void> {
         await this.userAppRepository.removeUserFromApp(appId, userId);
+    }
+
+    async findByUserAndApp(appId: string, userId: string) {
+        const userApp = await this.userAppRepository.findByUserAndApp(appId, userId);
+
+        if (!userApp) throw new NotFoundException('UserApp not found');
+
+        return userApp
+    }
+
+    async userHasAccessToApp(appId: string, userId: string) {
+        const userApp = await this.userAppRepository.userHasAccessToApp(appId, userId);
+        return userApp
     }
 
     private toResponseDto(userApp: any): UserAppResponseDto {

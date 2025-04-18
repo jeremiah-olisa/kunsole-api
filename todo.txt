@@ -1,5 +1,5 @@
-TODO: Payment Module
-TODO: Subscription Module
+DONE: Plan Module
+DONE: Payment Module
+DONE: Subscription Module
 TODO: User Module
-TODO: Plan Module
 TODO: Entry Module

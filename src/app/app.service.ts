@@ -1,4 +1,4 @@
-import { Injectable, ForbiddenException, NotFoundException } from '@nestjs/common';
+import { Injectable, ForbiddenException, NotFoundException, UnauthorizedException } from '@nestjs/common';
 import * as crypto from 'crypto';
 import * as bcrypt from 'bcrypt';
 import { $Enums, AppUserRole, Prisma } from '@prisma/client';
@@ -9,13 +9,15 @@ import { CreateAppDto } from './dtos/create-app.dto/create-app.dto';
 import { UpdateAppDto } from './dtos/update-app.dto/update-app.dto';
 import { UserAppService } from 'src/user-app/user-app.service';
 import { PlanService } from 'src/plan/plan.service';
+import { PaymentFilters } from 'src/payment/interfaces';
+import { PaymentService } from 'src/payment/payment.service';
 
 @Injectable()
 export class AppService {
     constructor(
         private readonly appRepository: AppRepository,
         private readonly userAppService: UserAppService,
-        private readonly planService: PlanService,
+        private readonly paymentService: PaymentService,
     ) { }
 
     async createApp(createAppDto: CreateAppDto, userId: string): Promise<AppEntity> {
@@ -46,6 +48,25 @@ export class AppService {
                 secretKey, // Only returned once during creation
             });
         });
+    }
+
+    async getAppPayments(
+        appId: string,
+        userId: string,
+        filter: PaymentFilters,
+        pagination?: IKeysetPaginationParams,
+    ) {
+        // Verify user has access to the app
+        const hasAccess = await this.userAppService.userHasAccessToApp(appId, userId);
+
+        if (!hasAccess) {
+            throw new UnauthorizedException('User does not have access to this app');
+        }
+
+        return this.paymentService.getAppPayments(appId, {
+            ...filter,
+            appId
+        }, pagination);
     }
 
     async getAppById(id: string, userId: string): Promise<AppEntity> {

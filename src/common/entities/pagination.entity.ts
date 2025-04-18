@@ -1,7 +1,6 @@
-import { IKeysetPaginationParams, IPaginatedResult } from "../interfaces/pagination.interface";
+import { IKeysetPaginationParams, IPaginatedResult, KeysetPaginationDirection } from "../interfaces/pagination.interface";
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { IsArray, IsOptional, IsString, IsNumber } from 'class-validator';
-
 
 export class PaginatedResult<T> implements IPaginatedResult<T> {
     @ApiProperty({
@@ -51,8 +50,8 @@ export class KeysetPaginationParams implements IKeysetPaginationParams {
 
     @ApiPropertyOptional({
         description: 'Pagination direction (forward or backward)',
-        enum: ['forward', 'backward'],
+        enum: KeysetPaginationDirection,
         example: 'forward',
     })
-    direction?: 'forward' | 'backward';
+    direction?: KeysetPaginationDirection;
 }

@@ -1,8 +1,12 @@
+export enum KeysetPaginationDirection {
+    forward,
+    backward
+}
 
 export interface IKeysetPaginationParams {
     cursor?: string;
     limit?: number;
-    direction?: 'forward' | 'backward';
+    direction?: KeysetPaginationDirection;
 }
 
 export interface IPaginatedResult<T> {
