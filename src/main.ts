@@ -62,15 +62,18 @@ const setupSwagger = (app: NestExpressApplication, version: string) => {
   const kunsoleDescription = `<p><strong>Pronounced:</strong> <em>kun·sohl</em> <small>(like “console”)</small></p> <p> The <strong>Kunsole API</strong> provides a unified interface for managing communications and activity tracking. With built-in support for <strong>email</strong>, <strong>SMS</strong>, and <strong>logging</strong>, this API enables seamless integration of messaging and monitoring capabilities into your applications. </p> <p> Built for <strong>performance</strong> and <strong>simplicity</strong>, Kunsole helps streamline notification workflows, improve system observability, and ensure reliable message delivery and log tracking. </p>`;
 
   const config = new DocumentBuilder()
-    .setTitle('Kunsole API')
+    .setTitle("Kunsole API")
     .setDescription(kunsoleDescription)
     .setVersion(version)
+    .addApiKey()
     .addBearerAuth()
+    .setContact("jerrydepredator", "", "jeremiaholisa453@gmail.com")
     .build();
 
   const document = SwaggerModule.createDocument(app, config, {
     extraModels: [],
     deepScanRoutes: true,
+    autoTagControllers: true,
   });
 
   SwaggerModule.setup('api', app, document);

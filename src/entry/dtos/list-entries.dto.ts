@@ -2,9 +2,17 @@ import { ApiPropertyOptional } from '@nestjs/swagger';
 import { IsOptional, IsEnum, IsDateString, IsBoolean, IsString } from 'class-validator';
 import { EntryType } from '@prisma/client';
 import { KeysetPaginationParams } from 'src/common/entities/pagination.entity';
-import { KeysetPaginationDirection } from 'src/common/interfaces/pagination.interface';
 
-export class ListEntriesDto {
+export interface ListEntriesDto {
+    type?: EntryType;
+    fromDate?: string;
+    toDate?: string;
+    appId?: string;
+    userId?: string;
+    isRead?: boolean;
+}
+
+export class ListEntriesQuery extends KeysetPaginationParams implements ListEntriesDto {
     @ApiPropertyOptional({
         description: 'Filter entries by type. Possible values include "email", "sms", "terminal", etc.',
         enum: EntryType,
@@ -53,27 +61,6 @@ export class ListEntriesDto {
     @IsBoolean()
     @IsOptional()
     isRead?: boolean;
-}
-
-export class ListEntriesQuery extends ListEntriesDto implements KeysetPaginationParams {
-    @ApiPropertyOptional({
-        description: 'Cursor for keyset pagination',
-        example: 'a1b2c3d4-e5f6-7890-abcd-ef1234567890',
-    })
-    cursor?: string;
-
-    @ApiPropertyOptional({
-        description: 'Number of items per page (default: 20, max: 100)',
-        example: 20,
-    })
-    limit?: number;
-
-    @ApiPropertyOptional({
-        description: 'Pagination direction (forward or backward)',
-        enum: KeysetPaginationDirection,
-        example: 'forward',
-    })
-    direction?: KeysetPaginationDirection;
 
     getFilters(): ListEntriesDto {
         const {
