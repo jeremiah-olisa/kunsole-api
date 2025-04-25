@@ -49,7 +49,7 @@ export class AuthController {
     }
 
     @Public()
-    @Post('google')
+    @Get('login/google')
     @ApiOperation({ summary: 'Login with Google' })
     @ApiResponse({ status: 200, description: 'Google login successful', type: TokenDto })
     @HttpCode(200)
@@ -58,7 +58,7 @@ export class AuthController {
     }
 
     @Public()
-    @Post('github')
+    @Get('login/github')
     @ApiOperation({ summary: 'Login with GitHub' })
     @ApiResponse({ status: 200, description: 'GitHub login successful', type: TokenDto })
     @HttpCode(200)

@@ -31,9 +31,7 @@ export class AuthService {
     }
 
     async googleLogin(userEntity: UserEntity): Promise<TokenDto> {
-        if (!userEntity) {
-            throw new UnauthorizedException('No user from Google');
-        }
+        this.validateUserEntityOrThrow(userEntity);
 
         const user = await this.authRepository.findOrCreateOAuthUser(
             userEntity as OAuthUserPayload,
@@ -44,9 +42,7 @@ export class AuthService {
     }
 
     async githubLogin(userEntity: UserEntity): Promise<TokenDto> {
-        if (!userEntity) {
-            throw new UnauthorizedException('No user from GitHub');
-        }
+        this.validateUserEntityOrThrow(userEntity);
 
         const user = await this.authRepository.findOrCreateOAuthUser(
             userEntity as OAuthUserPayload,
@@ -92,6 +88,12 @@ export class AuthService {
 
     async validateOAuthUser(userData: OAuthUserPayload, provider: AuthProvider): Promise<User> {
         return this.authRepository.findOrCreateOAuthUser(userData, provider);
+    }
+
+    private validateUserEntityOrThrow(userEntity: UserEntity) {
+        if (userEntity) return;
+
+        throw new UnauthorizedException('No user from Google');
     }
 
     private async generateTokens(user: User): Promise<TokenDto> {
