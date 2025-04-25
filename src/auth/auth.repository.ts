@@ -46,7 +46,6 @@ export class AuthRepository {
     const user = await this.prisma.user.findUnique({
       where: {
         email: payload.email,
-        provider,
       },
     });
 
