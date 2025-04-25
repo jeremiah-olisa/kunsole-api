@@ -1,5 +1,7 @@
 import { IsEmail, IsString, MinLength } from 'class-validator';
 import { ApiProperty } from '@nestjs/swagger';
+import { Unique } from 'src/common/decorators/database/unique.decorator';
+import { User } from '@prisma/client';
 
 export class RegisterDto {
     @ApiProperty({
@@ -7,6 +9,11 @@ export class RegisterDto {
         description: 'Valid email address of the user',
     })
     @IsEmail()
+    @Unique<User>({
+        table: 'user',
+        column: 'email',
+        message: ({ value }) => `Email '${value}' already exists, please use a different one.`
+    })
     email: string;
 
     @ApiProperty({
@@ -14,6 +21,7 @@ export class RegisterDto {
         description: 'Full name of the user',
     })
     @IsString()
+    @MinLength(4)
     fullName: string;
 
     @ApiProperty({

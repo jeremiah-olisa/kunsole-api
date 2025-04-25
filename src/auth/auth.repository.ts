@@ -21,6 +21,10 @@ export class AuthRepository {
         return this.prisma.user.findUnique({ where: { email } });
     }
 
+    async userExistsByEmail(email: string): Promise<boolean> {
+        return Boolean(await this.prisma.user.count({ where: { email } }));
+    }
+
     async findUserByUserKey(userKey: string): Promise<User | null> {
         return this.prisma.user.findUnique({ where: { userKey } });
     }

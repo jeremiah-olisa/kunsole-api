@@ -5,15 +5,20 @@ declare global {
     var prisma: PrismaClient;
 }
 
+/**
+ * Initializes a singleton Prisma client instance.
+ *
+ * In production, it ensures that a single global Prisma client is reused
+ * to prevent connection overload.
+ * In development, it attaches the Prisma client to the global object
+ * to maintain a single instance across hot reloads.
+ */
 export const InitialiseClient = () => {
-    if (process.env.NODE_ENV === 'production') global.prisma = new PrismaClient();
-
-    //check if there is already a connection to the database
-    if (process.env.NODE_ENV !== 'production' && global.prisma)
-        prisma = global.prisma;
-
-    if (process.env.NODE_ENV !== 'production' && !global.prisma)
+    if (!global.prisma) {
         global.prisma = new PrismaClient();
+    }
+
+    prisma = global.prisma;
 };
 
 InitialiseClient();
