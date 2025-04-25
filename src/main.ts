@@ -1,10 +1,10 @@
-import {
-  HttpStatus,
-  ValidationPipe,
-  VersioningType,
-} from '@nestjs/common';
+import { HttpStatus, ValidationPipe, VersioningType } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
-import { AbstractHttpAdapter, HttpAdapterHost, NestFactory } from '@nestjs/core';
+import {
+  AbstractHttpAdapter,
+  HttpAdapterHost,
+  NestFactory,
+} from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 import helmet from 'helmet';
 import * as hpp from 'hpp';
@@ -23,11 +23,11 @@ export const createExpressApp = async () => {
   return await NestFactory.create<NestExpressApplication>(AppModule, {
     abortOnError: false,
   });
-}
+};
 
 const setupSecurity = (app: NestExpressApplication) => {
   app.use(
-    helmet({ contentSecurityPolicy: false, crossOriginEmbedderPolicy: false })
+    helmet({ contentSecurityPolicy: false, crossOriginEmbedderPolicy: false }),
   );
   // TODO: Add rate limiting and xss protection
   app.use(hpp());
@@ -40,7 +40,7 @@ const setupParsers = (app: NestExpressApplication) => {
 
 const setupGlobalMiddleware = (
   app: NestExpressApplication,
-  httpAdapter: AbstractHttpAdapter<any, any, any>
+  httpAdapter: AbstractHttpAdapter<any, any, any>,
 ) => {
   app.useGlobalPipes(new ValidationPipe({ whitelist: true, transform: true }));
 
@@ -52,22 +52,21 @@ const setupGlobalMiddleware = (
       P2002: HttpStatus.CONFLICT,
       P2025: HttpStatus.NOT_FOUND,
     }),
-    new InternalServerExceptionFilter()
+    new InternalServerExceptionFilter(),
     // Add other filters if needed
   );
 };
 
 const setupSwagger = (app: NestExpressApplication, version: string) => {
-
   const kunsoleDescription = `<p><strong>Pronounced:</strong> <em>kun·sohl</em> <small>(like “console”)</small></p> <p> The <strong>Kunsole API</strong> provides a unified interface for managing communications and activity tracking. With built-in support for <strong>email</strong>, <strong>SMS</strong>, and <strong>logging</strong>, this API enables seamless integration of messaging and monitoring capabilities into your applications. </p> <p> Built for <strong>performance</strong> and <strong>simplicity</strong>, Kunsole helps streamline notification workflows, improve system observability, and ensure reliable message delivery and log tracking. </p>`;
 
   const config = new DocumentBuilder()
-    .setTitle("Kunsole API")
+    .setTitle('Kunsole API')
     .setDescription(kunsoleDescription)
     .setVersion(version)
     .addApiKey()
     .addBearerAuth()
-    .setContact("jerrydepredator", "", "jeremiaholisa453@gmail.com")
+    .setContact('jerrydepredator', '', 'jeremiaholisa453@gmail.com')
     .build();
 
   const document = SwaggerModule.createDocument(app, config, {

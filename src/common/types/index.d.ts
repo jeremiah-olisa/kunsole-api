@@ -2,8 +2,14 @@ import { Prisma, PrismaClient } from '@prisma/client';
 
 export type PrismaClientTransaction = Prisma.TransactionClient;
 
-export type DataType = 'string' | 'number' | 'array' | 'object' | 'bigint' | 'date' | 'boolean'
-
+export type DataType =
+  | 'string'
+  | 'number'
+  | 'array'
+  | 'object'
+  | 'bigint'
+  | 'date'
+  | 'boolean';
 
 export type FilterStartsWith<
   Set,

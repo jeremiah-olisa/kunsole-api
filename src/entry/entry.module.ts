@@ -8,6 +8,6 @@ import { UserAppModule } from 'src/user-app/user-app.module';
 @Module({
   imports: [UserAppModule],
   controllers: [EntryController],
-  providers: [PrismaService, EntryRepository, EntryService]
+  providers: [PrismaService, EntryRepository, EntryService],
 })
-export class EntryModule { }
+export class EntryModule {}

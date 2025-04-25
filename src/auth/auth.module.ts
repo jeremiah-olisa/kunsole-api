@@ -15,31 +15,31 @@ import { GithubStrategy } from './strategies/github.strategy';
 import { PrismaService } from 'nestjs-prisma';
 
 @Module({
-    imports: [
-        // UserModule,
-        PassportModule,
-        Reflector,
-        JwtModule.register({
-            secret: process.env.JWT_SECRET,
-            signOptions: { expiresIn: '1h' },
-        }),
-    ],
-    controllers: [AuthController],
-    providers: [
-        PrismaService,
-        AuthService,
-        AuthRepository,
-        LocalStrategy,
-        JwtStrategy,
-        GoogleStrategy,
-        GithubStrategy,
-        JwtAuthGuard,
-        {
-            provide: 'APP_GUARD',
-            useClass: JwtAuthGuard,
-        },
-        ApiKeyGuard,
-    ],
-    exports: [AuthService, ApiKeyGuard],
+  imports: [
+    // UserModule,
+    PassportModule,
+    Reflector,
+    JwtModule.register({
+      secret: process.env.JWT_SECRET,
+      signOptions: { expiresIn: '1h' },
+    }),
+  ],
+  controllers: [AuthController],
+  providers: [
+    PrismaService,
+    AuthService,
+    AuthRepository,
+    LocalStrategy,
+    JwtStrategy,
+    GoogleStrategy,
+    GithubStrategy,
+    JwtAuthGuard,
+    {
+      provide: 'APP_GUARD',
+      useClass: JwtAuthGuard,
+    },
+    ApiKeyGuard,
+  ],
+  exports: [AuthService, ApiKeyGuard],
 })
-export class AuthModule { }
+export class AuthModule {}

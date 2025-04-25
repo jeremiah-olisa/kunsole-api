@@ -7,26 +7,31 @@ import { PaymentProvider } from '@prisma/client';
 
 @Injectable()
 export class PaymentProviderFactory {
-    private readonly defaultPaymentProvider: PaymentProvider;
+  private readonly defaultPaymentProvider: PaymentProvider;
 
-    constructor(
-        private readonly paystackProvider: PaystackProvider,
-        private readonly flutterwaveProvider: FlutterwaveProvider,
-        private readonly configService: ConfigService,
-    ) {
-        this.defaultPaymentProvider = this.configService.getOrThrow<PaymentProvider>('DEFAULT_PAYMENT_PROVIDER');
+  constructor(
+    private readonly paystackProvider: PaystackProvider,
+    private readonly flutterwaveProvider: FlutterwaveProvider,
+    private readonly configService: ConfigService,
+  ) {
+    this.defaultPaymentProvider =
+      this.configService.getOrThrow<PaymentProvider>(
+        'DEFAULT_PAYMENT_PROVIDER',
+      );
+  }
+
+  getProvider(provider?: PaymentProvider): IPaymentProvider {
+    provider ??= this.defaultPaymentProvider;
+
+    switch (provider) {
+      case PaymentProvider.PAYSTACK:
+        return this.paystackProvider;
+      case PaymentProvider.FLUTTERWAVE:
+        return this.flutterwaveProvider;
+      default:
+        throw new InternalServerErrorException(
+          `Unsupported payment provider: ${provider}`,
+        );
     }
-
-    getProvider(provider?: PaymentProvider): IPaymentProvider {
-        provider ??= this.defaultPaymentProvider;
-
-        switch (provider) {
-            case PaymentProvider.PAYSTACK:
-                return this.paystackProvider;
-            case PaymentProvider.FLUTTERWAVE:
-                return this.flutterwaveProvider;
-            default:
-                throw new InternalServerErrorException(`Unsupported payment provider: ${provider}`);
-        }
-    }
+  }
 }

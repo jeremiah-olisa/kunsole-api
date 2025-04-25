@@ -1,19 +1,17 @@
 export enum KeysetPaginationDirection {
-    forward,
-    backward
+  forward,
+  backward,
 }
 
 export interface IKeysetPaginationParams {
-    cursor?: string;
-    limit?: number;
-    direction?: KeysetPaginationDirection;
+  cursor?: string;
+  limit?: number;
+  direction?: KeysetPaginationDirection;
 }
 
 export interface IPaginatedResult<T> {
-    data: T[];
-    nextCursor?: string;
-    prevCursor?: string;
-    total: number;
+  data: T[];
+  nextCursor?: string;
+  prevCursor?: string;
+  total: number;
 }
-
-

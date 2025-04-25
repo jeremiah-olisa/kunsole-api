@@ -22,7 +22,7 @@ export class PrismaInterceptor implements NestInterceptor {
           const constraint =
             error.meta && typeof error.meta['target'] == 'string'
               ? error.meta['target']
-              : (error.meta?.['target'] as any)?.join(', ') ?? '';
+              : ((error.meta?.['target'] as any)?.join(', ') ?? '');
 
           const customMessage = PRISMA_ERRORS[error.code]?.replace(
             '{constraint}',
@@ -40,7 +40,7 @@ export class PrismaInterceptor implements NestInterceptor {
 
           throw new PrismaException(
             errors,
-            ((error.meta?.['cause'] ?? errorMessage) as any),
+            (error.meta?.['cause'] ?? errorMessage) as any,
           );
         } else {
           throw error;

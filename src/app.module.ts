@@ -23,4 +23,4 @@ import { EntryModule } from './entry/entry.module';
   ],
   providers: [],
 })
-export class AppModule { }
+export class AppModule {}

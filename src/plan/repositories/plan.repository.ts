@@ -1,12 +1,18 @@
 import { Injectable } from '@nestjs/common';
 import { PrismaService } from 'nestjs-prisma';
 import { Plan, PlanType, Prisma } from '@prisma/client';
-import { IKeysetPaginationParams, IPaginatedResult } from 'src/common/interfaces/pagination.interface';
-import { PAGINATION_SIZE_DEFAULT_LIMIT, PAGINATION_SIZE_MAX_LIMIT } from 'src/common/constants/pagination.constant';
+import {
+  IKeysetPaginationParams,
+  IPaginatedResult,
+} from 'src/common/interfaces/pagination.interface';
+import {
+  PAGINATION_SIZE_DEFAULT_LIMIT,
+  PAGINATION_SIZE_MAX_LIMIT,
+} from 'src/common/constants/pagination.constant';
 
 @Injectable()
 export class PlanRepository {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async findById(id: string): Promise<Plan | null> {
     return this.prisma.plan.findUnique({
@@ -26,17 +32,23 @@ export class PlanRepository {
     });
   }
 
-  async findByPrice(price: number, select?: Prisma.PlanSelect): Promise<Plan | null> {
+  async findByPrice(
+    price: number,
+    select?: Prisma.PlanSelect,
+  ): Promise<Plan | null> {
     return this.prisma.plan.findFirst({
       where: { price },
-      select: select
+      select: select,
     });
   }
 
   async findAll(
     pagination?: IKeysetPaginationParams,
   ): Promise<IPaginatedResult<Plan>> {
-    const limit = Math.min(pagination?.limit || PAGINATION_SIZE_DEFAULT_LIMIT, PAGINATION_SIZE_MAX_LIMIT);
+    const limit = Math.min(
+      pagination?.limit || PAGINATION_SIZE_DEFAULT_LIMIT,
+      PAGINATION_SIZE_MAX_LIMIT,
+    );
     const direction = pagination?.direction || 'forward';
     const cursor = pagination?.cursor ? { id: pagination.cursor } : undefined;
 
@@ -64,10 +76,7 @@ export class PlanRepository {
     });
   }
 
-  async update(
-    id: string,
-    data: Prisma.PlanUpdateInput,
-  ): Promise<Plan> {
+  async update(id: string, data: Prisma.PlanUpdateInput): Promise<Plan> {
     return this.prisma.plan.update({
       where: { id },
       data,

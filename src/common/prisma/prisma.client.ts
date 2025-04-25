@@ -1,8 +1,8 @@
 import { PrismaClient } from '@prisma/client';
 
 declare global {
-    // eslint-disable-next-line no-var
-    var prisma: PrismaClient;
+  // eslint-disable-next-line no-var
+  var prisma: PrismaClient;
 }
 
 /**
@@ -14,11 +14,11 @@ declare global {
  * to maintain a single instance across hot reloads.
  */
 export const InitialiseClient = () => {
-    if (!global.prisma) {
-        global.prisma = new PrismaClient();
-    }
+  if (!global.prisma) {
+    global.prisma = new PrismaClient();
+  }
 
-    prisma = global.prisma;
+  prisma = global.prisma;
 };
 
 InitialiseClient();

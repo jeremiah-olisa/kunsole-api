@@ -5,8 +5,8 @@ import { PlanController } from './plan.controller';
 import { PlanService } from './plan.service';
 
 @Module({
-    controllers: [PlanController],
-    providers: [PlanService, PlanRepository, PrismaService],
-    exports: [PlanService],
+  controllers: [PlanController],
+  providers: [PlanService, PlanRepository, PrismaService],
+  exports: [PlanService],
 })
-export class PlanModule { }
+export class PlanModule {}

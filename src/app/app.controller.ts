@@ -28,9 +28,15 @@ import {
   ApiNotFoundResponse,
 } from '@nestjs/swagger';
 import { IPaginatedResult } from 'src/common/interfaces/pagination.interface';
-import { KeysetPaginationParams, PaginatedResult } from 'src/common/entities/pagination.entity';
+import {
+  KeysetPaginationParams,
+  PaginatedResult,
+} from 'src/common/entities/pagination.entity';
 import { CreateAppDto } from './dtos/create-app.dto/create-app.dto';
-import { AppEntity, PaginatedAppResult } from './entities/app.entity/app.entity';
+import {
+  AppEntity,
+  PaginatedAppResult,
+} from './entities/app.entity/app.entity';
 import { UpdateAppDto } from './dtos/update-app.dto/update-app.dto';
 import { SwaggerAuthenticated } from 'src/auth/decorators/swagger-auth.decorator';
 
@@ -39,12 +45,13 @@ import { SwaggerAuthenticated } from 'src/auth/decorators/swagger-auth.decorator
 @SwaggerAuthenticated()
 @UseGuards(JwtAuthGuard)
 export class AppController {
-  constructor(private readonly appService: AppService) { }
+  constructor(private readonly appService: AppService) {}
 
   @Post()
   @ApiOperation({
     summary: 'Create a new application',
-    description: 'Creates a new application and assigns the creator as OWNER. Returns the app with API keys (keys are only shown once).',
+    description:
+      'Creates a new application and assigns the creator as OWNER. Returns the app with API keys (keys are only shown once).',
   })
   @ApiBody({ type: CreateAppDto })
   @ApiCreatedResponse({
@@ -64,7 +71,8 @@ export class AppController {
   @Get()
   @ApiOperation({
     summary: 'List user applications',
-    description: 'Returns paginated list of applications the user has access to',
+    description:
+      'Returns paginated list of applications the user has access to',
   })
   @ApiQuery({
     name: 'KeysetPaginationParams',
@@ -140,10 +148,7 @@ export class AppController {
   @ApiOkResponse({ description: 'Application deleted successfully' })
   @ApiNotFoundResponse({ description: 'Application not found' })
   @ApiForbiddenResponse({ description: 'Insufficient permissions' })
-  async remove(
-    @Param('id') id: string,
-    @Req() req: Request,
-  ): Promise<void> {
+  async remove(@Param('id') id: string, @Req() req: Request): Promise<void> {
     const user = new UserEntity(req.user);
 
     return this.appService.deleteApp(id, user.id);
@@ -152,7 +157,8 @@ export class AppController {
   @Post(':id/rotate-keys')
   @ApiOperation({
     summary: 'Rotate API keys',
-    description: 'Generates new API keys for the application (requires OWNER role). Returns new keys (only shown once).',
+    description:
+      'Generates new API keys for the application (requires OWNER role). Returns new keys (only shown once).',
   })
   @ApiParam({
     name: 'id',
@@ -176,7 +182,8 @@ export class AppController {
   @Post(':id/toggle-status')
   @ApiOperation({
     summary: 'Toggle application status',
-    description: 'Activates/deactivates an application (requires OWNER or ADMIN role)',
+    description:
+      'Activates/deactivates an application (requires OWNER or ADMIN role)',
   })
   @ApiParam({
     name: 'id',

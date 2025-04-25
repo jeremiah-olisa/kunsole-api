@@ -3,12 +3,15 @@ import { UserApp, AppUserRole } from '@prisma/client';
 import { PrismaService } from 'nestjs-prisma';
 import { IKeysetPaginationParams } from 'src/common/interfaces/pagination.interface';
 import { PaginatedResult } from 'src/common/entities/pagination.entity';
-import { PAGINATION_SIZE_DEFAULT_LIMIT, PAGINATION_SIZE_MAX_LIMIT } from 'src/common/constants/pagination.constant';
+import {
+  PAGINATION_SIZE_DEFAULT_LIMIT,
+  PAGINATION_SIZE_MAX_LIMIT,
+} from 'src/common/constants/pagination.constant';
 import { PrismaClientTransaction } from 'src/common/types';
 
 @Injectable()
 export class UserAppRepository {
-  constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
   async createUserApp(
     data: {
@@ -58,7 +61,11 @@ export class UserAppRepository {
     });
   }
 
-  async getUserAppId(userId: string, appId: string, tx?: PrismaClientTransaction) {
+  async getUserAppId(
+    userId: string,
+    appId: string,
+    tx?: PrismaClientTransaction,
+  ) {
     const client = tx || this.prisma;
 
     return await client.userApp.findFirstOrThrow({
@@ -66,7 +73,7 @@ export class UserAppRepository {
         userId,
         appId,
       },
-      select: { id: true }
+      select: { id: true },
     });
   }
 
@@ -76,7 +83,10 @@ export class UserAppRepository {
     tx?: PrismaClientTransaction,
   ): Promise<PaginatedResult<UserApp>> {
     const client = tx || this.prisma;
-    const limit = Math.min(pagination?.limit || PAGINATION_SIZE_DEFAULT_LIMIT, PAGINATION_SIZE_MAX_LIMIT);
+    const limit = Math.min(
+      pagination?.limit || PAGINATION_SIZE_DEFAULT_LIMIT,
+      PAGINATION_SIZE_MAX_LIMIT,
+    );
     const direction = pagination?.direction || 'forward';
     const cursor = pagination?.cursor ? { id: pagination.cursor } : undefined;
 
@@ -121,7 +131,7 @@ export class UserAppRepository {
       },
       select: {
         role: true,
-        user: { select: { email: true } }
+        user: { select: { email: true } },
       },
     });
   }
@@ -133,14 +143,14 @@ export class UserAppRepository {
     isActive = true,
   ) {
     const client = tx || this.prisma;
-    return (await client.userApp.count({
-      where: {
-        userId,
-        appId,
-        isActive,
-      },
-    })) > 0;
+    return (
+      (await client.userApp.count({
+        where: {
+          userId,
+          appId,
+          isActive,
+        },
+      })) > 0
+    );
   }
-
-
 }

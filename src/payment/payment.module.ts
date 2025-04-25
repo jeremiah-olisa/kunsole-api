@@ -10,7 +10,14 @@ import { FlutterwaveProvider } from './providers/flutterwave.provider';
 @Module({
   imports: [],
   controllers: [PaymentController],
-  providers: [PrismaService, PaymentService, PaymentRepository, PaymentProviderFactory, PaystackProvider, FlutterwaveProvider],
-  exports: [PaymentService]
+  providers: [
+    PrismaService,
+    PaymentService,
+    PaymentRepository,
+    PaymentProviderFactory,
+    PaystackProvider,
+    FlutterwaveProvider,
+  ],
+  exports: [PaymentService],
 })
-export class PaymentModule { }
+export class PaymentModule {}

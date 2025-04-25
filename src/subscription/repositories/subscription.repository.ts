@@ -5,69 +5,77 @@ import { PrismaClientTransaction } from 'src/common/types';
 
 @Injectable()
 export class SubscriptionRepository {
-    constructor(private readonly prisma: PrismaService) { }
+  constructor(private readonly prisma: PrismaService) {}
 
-    async findActiveByUserId(userId: string, tx?: PrismaClientTransaction): Promise<Subscription | null> {
-        const client = tx || this.prisma;
-        return client.subscription.findFirst({
-            where: { userId, isActive: true },
-        });
-    }
+  async findActiveByUserId(
+    userId: string,
+    tx?: PrismaClientTransaction,
+  ): Promise<Subscription | null> {
+    const client = tx || this.prisma;
+    return client.subscription.findFirst({
+      where: { userId, isActive: true },
+    });
+  }
 
-    async create(
-        data: Prisma.SubscriptionCreateInput,
-        tx?: PrismaClientTransaction,
-    ): Promise<Subscription> {
-        const client = tx || this.prisma;
-        return client.subscription.create({ data });
-    }
+  async create(
+    data: Prisma.SubscriptionCreateInput,
+    tx?: PrismaClientTransaction,
+  ): Promise<Subscription> {
+    const client = tx || this.prisma;
+    return client.subscription.create({ data });
+  }
 
-    async update(
-        id: string,
-        data: Prisma.SubscriptionUpdateInput,
-        tx?: PrismaClientTransaction,
-    ): Promise<Subscription> {
-        const client = tx || this.prisma;
-        return client.subscription.update({
-            where: { id },
-            data,
-        });
-    }
+  async update(
+    id: string,
+    data: Prisma.SubscriptionUpdateInput,
+    tx?: PrismaClientTransaction,
+  ): Promise<Subscription> {
+    const client = tx || this.prisma;
+    return client.subscription.update({
+      where: { id },
+      data,
+    });
+  }
 
-    async updateMany(
-        where: Prisma.SubscriptionWhereInput,
-        data: Prisma.SubscriptionUpdateInput,
-        tx?: PrismaClientTransaction,
-    ): Promise<Prisma.BatchPayload> {
-        const client = tx || this.prisma;
-        return client.subscription.updateMany({ where, data });
-    }
+  async updateMany(
+    where: Prisma.SubscriptionWhereInput,
+    data: Prisma.SubscriptionUpdateInput,
+    tx?: PrismaClientTransaction,
+  ): Promise<Prisma.BatchPayload> {
+    const client = tx || this.prisma;
+    return client.subscription.updateMany({ where, data });
+  }
 
-    async findById(id: string, tx?: PrismaClientTransaction): Promise<Subscription | null> {
-        const client = tx || this.prisma;
-        return client.subscription.findUnique({
-            where: { id, },
-            include: { plan: true, user: true },
-        });
-    }
+  async findById(
+    id: string,
+    tx?: PrismaClientTransaction,
+  ): Promise<Subscription | null> {
+    const client = tx || this.prisma;
+    return client.subscription.findUnique({
+      where: { id },
+      include: { plan: true, user: true },
+    });
+  }
 
-    async findFirstQueuedAfterDate(
-        userId: string,
-        date: Date,
-        tx?: PrismaClientTransaction,
-    ): Promise<Subscription | null> {
-        const client = tx || this.prisma;
-        return client.subscription.findFirst({
-            where: {
-                userId,
-                isQueued: true,
-                startsAt: { gte: date },
-            },
-            orderBy: { startsAt: 'asc' },
-        });
-    }
+  async findFirstQueuedAfterDate(
+    userId: string,
+    date: Date,
+    tx?: PrismaClientTransaction,
+  ): Promise<Subscription | null> {
+    const client = tx || this.prisma;
+    return client.subscription.findFirst({
+      where: {
+        userId,
+        isQueued: true,
+        startsAt: { gte: date },
+      },
+      orderBy: { startsAt: 'asc' },
+    });
+  }
 
-    async $transaction<T>(fn: (tx: PrismaClientTransaction) => Promise<T>): Promise<T> {
-        return this.prisma.$transaction(fn);
-    }
+  async $transaction<T>(
+    fn: (tx: PrismaClientTransaction) => Promise<T>,
+  ): Promise<T> {
+    return this.prisma.$transaction(fn);
+  }
 }

@@ -12,4 +12,4 @@ import { PrismaService } from 'nestjs-prisma';
   providers: [SubscriptionService, SubscriptionRepository, PrismaService],
   exports: [SubscriptionService],
 })
-export class SubscriptionModule { }
+export class SubscriptionModule {}
