@@ -34,7 +34,6 @@ export class PaymentService {
             amount: dto.amount,
             reference: result.paymentReference,
             provider: dto.provider ?? provider.getProviderName(),
-            app: { connect: { id: dto.appId } },
             user: { connect: { id: dto.userId } },
             subscription: dto.subscriptionId
                 ? { connect: { id: dto.subscriptionId } }

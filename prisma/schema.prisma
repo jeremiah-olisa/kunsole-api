@@ -61,10 +61,8 @@ model App {
   isActive      Boolean        @default(true)
   planId        String         @db.ObjectId
   plan          Plan           @relation(fields: [planId], references: [id])
-  subscriptions Subscription[]
   entries       Entry[]
   userApp       UserApp[]
-  Payment       Payment[]
 }
 
 model User {
@@ -144,8 +142,6 @@ model Payment {
   provider     PaymentProvider
   status       PaymentStatus   @default(PENDING)
   metadata     Json?
-  appId        String          @db.ObjectId
-  app          App             @relation(fields: [appId], references: [id])
   userId       String          @db.ObjectId
   user         User            @relation(fields: [userId], references: [id])
   subscription Subscription?
@@ -157,8 +153,6 @@ model Subscription {
   id        String    @id @default(auto()) @map("_id") @db.ObjectId
   planId    String    @db.ObjectId
   plan      Plan      @relation(fields: [planId], references: [id])
-  appId     String    @db.ObjectId
-  app       App       @relation(fields: [appId], references: [id])
   userId    String    @db.ObjectId
   user      User      @relation(fields: [userId], references: [id])
   paymentId String?   @unique @db.ObjectId
@@ -170,6 +164,5 @@ model Subscription {
   createdAt DateTime  @default(now())
   updatedAt DateTime  @updatedAt
 
-  @@index([appId])
   @@index([userId])
 }

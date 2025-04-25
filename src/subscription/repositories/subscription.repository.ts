@@ -7,10 +7,10 @@ import { PrismaClientTransaction } from 'src/common/types';
 export class SubscriptionRepository {
     constructor(private readonly prisma: PrismaService) { }
 
-    async findActiveByAppId(appId: string, tx?: PrismaClientTransaction): Promise<Subscription | null> {
+    async findActiveByUserId(userId: string, tx?: PrismaClientTransaction): Promise<Subscription | null> {
         const client = tx || this.prisma;
         return client.subscription.findFirst({
-            where: { appId, isActive: true },
+            where: { userId, isActive: true },
         });
     }
 
@@ -46,20 +46,20 @@ export class SubscriptionRepository {
     async findById(id: string, tx?: PrismaClientTransaction): Promise<Subscription | null> {
         const client = tx || this.prisma;
         return client.subscription.findUnique({
-            where: { id },
-            include: { plan: true, app: true, user: true },
+            where: { id, },
+            include: { plan: true, user: true },
         });
     }
 
     async findFirstQueuedAfterDate(
-        appId: string,
+        userId: string,
         date: Date,
         tx?: PrismaClientTransaction,
     ): Promise<Subscription | null> {
         const client = tx || this.prisma;
         return client.subscription.findFirst({
             where: {
-                appId,
+                userId,
                 isQueued: true,
                 startsAt: { gte: date },
             },

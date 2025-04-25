@@ -24,12 +24,11 @@ export class SubscriptionService {
         }
 
         return this.repository.$transaction(async (tx) => {
-            const activeSub = await this.repository.findActiveByAppId(dto.appId, tx);
+            const activeSub = await this.repository.findActiveByUserId(dto.appId, tx);
 
             const subscription = await this.repository.create(
                 {
                     plan: { connect: { id: dto.planId } },
-                    app: { connect: { id: dto.appId } },
                     user: { connect: { id: userId } },
                     startsAt: activeSub ? undefined : new Date(), // Will be set when activated
                     endsAt: undefined, // Will be calculated when activated
@@ -59,7 +58,7 @@ export class SubscriptionService {
         await this.repository.$transaction(async (tx) => {
             // Deactivate current active subscriptions
             await this.repository.updateMany(
-                { appId: subscription.appId, isActive: true },
+                { userId: subscription.userId, isActive: true },
                 { isActive: false },
                 tx,
             );
@@ -92,7 +91,7 @@ export class SubscriptionService {
         if (!currentSub || !currentSub.endsAt) return;
 
         const nextQueued = await this.repository.findFirstQueuedAfterDate(
-            currentSub.appId,
+            currentSub.userId,
             currentSub.endsAt,
             tx,
         );

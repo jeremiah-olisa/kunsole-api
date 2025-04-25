@@ -19,8 +19,7 @@ export class PaymentRepository {
         return this.prisma.payment.findUnique({
             where: { reference },
             include: {
-                app: true,
-                user: true,
+                user: { select: { fullName: true, email: true } },
                 subscription: true,
             },
         });
@@ -56,8 +55,7 @@ export class PaymentRepository {
                 skip: cursor ? 1 : 0,
                 orderBy: { createdAt: 'desc' },
                 include: {
-                    app: true,
-                    user: true,
+                    user: { select: { fullName: true, email: true } },
                     subscription: true,
                 },
             }),
