@@ -49,6 +49,7 @@ export class AuthController {
     }
 
     @Public()
+    @UseGuards(GoogleAuthGuard)
     @Get('login/google')
     @ApiOperation({ summary: 'Login with Google' })
     @ApiResponse({ status: 200, description: 'Google login successful', type: TokenDto })
@@ -59,35 +60,12 @@ export class AuthController {
 
     @Public()
     @Get('login/github')
+    @UseGuards(GithubAuthGuard)
     @ApiOperation({ summary: 'Login with GitHub' })
     @ApiResponse({ status: 200, description: 'GitHub login successful', type: TokenDto })
     @HttpCode(200)
     async githubAuth(@Req() req: Request): Promise<TokenDto> {
         return await this.authService.githubLogin(req.user);
-    }
-
-    @Post('refresh')
-    @ApiOperation({ summary: 'Refresh access token' })
-    @ApiBody({
-        schema: {
-            type: 'object',
-            properties: {
-                refreshToken: { type: 'string', example: 'your-refresh-token-here' },
-            },
-        },
-    })
-    @ApiResponse({ status: 200, description: 'Token refreshed', type: TokenDto })
-    @ApiResponse({ status: 401, description: 'Invalid refresh token' })
-    @HttpCode(200)
-    async refreshToken(@Body('refreshToken') refreshToken: string): Promise<TokenDto> {
-        return await this.authService.refreshToken(refreshToken);
-    }
-
-    @Post('')
-    @ApiOperation({ summary: 'Refresh access token' })
-    @HttpCode(200)
-    async index(@Body() body) {
-        return { ...body, success: true };
     }
 
     @Public()
@@ -109,4 +87,22 @@ export class AuthController {
     async githubAuthCallback(@Req() req: Request): Promise<TokenDto> {
         return await this.authService.login(req.user);
     }
+
+    @Post('refresh')
+    @ApiOperation({ summary: 'Refresh access token' })
+    @ApiBody({
+        schema: {
+            type: 'object',
+            properties: {
+                refreshToken: { type: 'string', example: 'your-refresh-token-here' },
+            },
+        },
+    })
+    @ApiResponse({ status: 200, description: 'Token refreshed', type: TokenDto })
+    @ApiResponse({ status: 401, description: 'Invalid refresh token' })
+    @HttpCode(200)
+    async refreshToken(@Body('refreshToken') refreshToken: string): Promise<TokenDto> {
+        return await this.authService.refreshToken(refreshToken);
+    }
+
 }
