@@ -23,7 +23,6 @@ export class AppRepository {
   async findById(id: string, includeRelations = false): Promise<App | null> {
     return this.prisma.app.findUnique({
       where: { id },
-      include: this.getIncludeOptions(includeRelations),
     });
   }
 
@@ -45,7 +44,6 @@ export class AppRepository {
 
     return client.app.create({
       data,
-      include: this.getIncludeOptions(true),
     });
   }
 
@@ -53,7 +51,6 @@ export class AppRepository {
     return this.prisma.app.update({
       where: { id },
       data,
-      include: this.getIncludeOptions(true),
     });
   }
 
@@ -132,18 +129,5 @@ export class AppRepository {
 
     if (!app) return false;
     return bcrypt.compare(secretKey, app.secretKey);
-  }
-
-  private getIncludeOptions(include: boolean) {
-    return include
-      ? {
-        plan: true,
-        userApp: {
-          include: {
-            user: true,
-          },
-        },
-      }
-      : undefined;
   }
 }

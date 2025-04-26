@@ -40,7 +40,7 @@ export class AppService {
     tx?: PrismaClientTransaction
   ): Promise<AppEntity> {
     const publicKey = this.generateKey(16, 'kunsole_pk');
-    const secretKey = this.generateKey(32, 'kunsole_sk');
+    const secretKey = this.generateKey(16, 'kunsole_sk');
     const hashedSecretKey = await bcrypt.hash(secretKey, 10);
 
     const app = await this.appRepository.create({
@@ -111,7 +111,7 @@ export class AppService {
     await this.verifyUserAccess(id, userId, [AppUserRole.OWNER]);
 
     const publicKey = this.generateKey(16, 'kunsole_pk');
-    const secretKey = this.generateKey(32, 'kunsole_sk');
+    const secretKey = this.generateKey(16, 'kunsole_sk');
     const hashedSecretKey = await bcrypt.hash(secretKey, 10);
 
     const updatedApp = await this.appRepository.update(id, {

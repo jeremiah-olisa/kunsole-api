@@ -7,7 +7,7 @@ import { CacheProviderFactory } from './providers/cache-provider.factory';
 @Module({
     providers: [
         CacheService,
-        RedisProvider,
+        // RedisProvider,
         MemoryProvider,
         CacheProviderFactory,
     ],
