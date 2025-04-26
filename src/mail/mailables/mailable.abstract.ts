@@ -1,13 +1,20 @@
+import { MailProvider } from "../interfaces/mail-provider.interface";
 import { MailService } from "../services/mail.service";
 
 export abstract class Mailable {
     protected toAddress: string;
+    protected provider?: MailProvider = undefined;
     protected subjectText: string;
     protected templatePath: string;
     protected templateData: Record<string, any> = {};
 
     to(address: string): this {
         this.toAddress = address;
+        return this;
+    }
+
+    mailProvider(provider: MailProvider): this {
+        this.provider = provider;
         return this;
     }
 
@@ -35,6 +42,6 @@ export abstract class Mailable {
             subject: this.subjectText,
             templatePath: this.templatePath,
             data: this.templateData,
-        });
+        }, this.provider);
     }
 }

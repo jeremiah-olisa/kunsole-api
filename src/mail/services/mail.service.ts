@@ -2,17 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { MailProviderFactory } from '../providers/mail-provider.factory';
 import { Mailable } from '../mailables/mailable.abstract';
 import { TemplateService } from './template.service';
-import { ISendMailProps } from '../interfaces/mail-provider.interface';
+import { ISendMailProps, MailProvider } from '../interfaces/mail-provider.interface';
 
 @Injectable()
 export class MailService {
   constructor(
-    private providerFactory: MailProviderFactory,
-    private templateService: TemplateService,
+    private readonly providerFactory: MailProviderFactory,
+    private readonly templateService: TemplateService,
   ) { }
 
-  async sendMail(options: ISendMailProps): Promise<void> {
-    const provider = this.providerFactory.getProvider();
+  async sendMail(options: ISendMailProps, mailProvider?: MailProvider): Promise<void> {
+    const provider = this.providerFactory.getProvider(mailProvider);
 
     let html = options.content;
 
