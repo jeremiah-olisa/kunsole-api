@@ -8,6 +8,7 @@ import {
 } from 'class-validator';
 import { EntryType } from '@prisma/client';
 import { KeysetPaginationParams } from 'src/common/entities/pagination.entity';
+import { Type } from 'class-transformer';
 
 export interface ListEntriesDto {
   type?: EntryType;
@@ -20,13 +21,12 @@ export interface ListEntriesDto {
 
 export class ListEntriesQuery
   extends KeysetPaginationParams
-  implements ListEntriesDto
-{
+  implements ListEntriesDto {
   @ApiPropertyOptional({
     description:
       'Filter entries by type. Possible values include "email", "sms", "terminal", etc.',
     enum: EntryType,
-    example: EntryType.EMAIL,
+    // example: EntryType.EMAIL,
   })
   @IsEnum(EntryType)
   @IsOptional()
@@ -35,7 +35,7 @@ export class ListEntriesQuery
   @ApiPropertyOptional({
     description:
       'Filter entries from this date onwards. Must be in ISO 8601 format (e.g., "2023-04-01T00:00:00Z")',
-    example: '2023-04-01T00:00:00Z',
+    // example: '2023-04-01T00:00:00Z',
   })
   @IsDateString()
   @IsOptional()
@@ -44,7 +44,7 @@ export class ListEntriesQuery
   @ApiPropertyOptional({
     description:
       'Filter entries up to this date. Must be in ISO 8601 format (e.g., "2023-04-30T23:59:59Z")',
-    example: '2023-04-30T23:59:59Z',
+    // example: '2023-04-30T23:59:59Z',
   })
   @IsDateString()
   @IsOptional()
@@ -53,7 +53,7 @@ export class ListEntriesQuery
   @ApiPropertyOptional({
     description:
       'Filter entries by the application ID. If not provided, returns entries for all apps.',
-    example: 'app123',
+    // example: 'app123',
   })
   @IsString()
   @IsOptional()
@@ -62,7 +62,7 @@ export class ListEntriesQuery
   @ApiPropertyOptional({
     description:
       'Filter entries by user ID. If not provided, returns entries for all users.',
-    example: 'user123',
+    // example: 'user123',
   })
   @IsString()
   @IsOptional()
@@ -71,10 +71,11 @@ export class ListEntriesQuery
   @ApiPropertyOptional({
     description:
       'Filter entries by read status. If not provided, returns entries regardless of whether they are read or not.',
-    example: true,
+    // example: true,
   })
   @IsBoolean()
   @IsOptional()
+  @Type(() => Boolean)
   isRead?: boolean;
 
   getFilters(): ListEntriesDto {

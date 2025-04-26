@@ -64,8 +64,29 @@ const setupSwagger = (app: NestExpressApplication, version: string) => {
     .setTitle('Kunsole API')
     .setDescription(kunsoleDescription)
     .setVersion(version)
-    .addApiKey()
-    .addBearerAuth()
+    // For JWT Bearer Token authentication
+    .addBearerAuth({
+      type: 'http',
+      scheme: 'bearer',
+      bearerFormat: 'JWT',
+      name: 'JWT',
+      description: 'Enter JWT token',
+      in: 'header'
+    }, 'JWT-auth') // This name is used to reference the security scheme
+    // For API Key authentication (X-API-Key)
+    .addApiKey({
+      type: 'apiKey',
+      name: 'X-API-Key',
+      in: 'header',
+      description: 'Enter your public API key'
+    }, 'API-Key')
+    // For API Secret authentication (X-API-Secret)
+    .addApiKey({
+      type: 'apiKey',
+      name: 'X-API-Secret',
+      in: 'header',
+      description: 'Enter your secret API key'
+    }, 'API-Secret')
     .setContact('jerrydepredator', '', 'jeremiaholisa453@gmail.com')
     .build();
 

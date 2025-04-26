@@ -14,6 +14,8 @@ import { GoogleStrategy } from './strategies/google.strategy';
 import { GithubStrategy } from './strategies/github.strategy';
 import { PrismaService } from 'nestjs-prisma';
 import { UserModule } from 'src/user/user.module';
+import { JwtOrApiKeyGuard } from './guards/jwt-or-api-key.guard';
+import { AppModule } from 'src/app.module';
 
 @Module({
   imports: [
@@ -37,10 +39,10 @@ import { UserModule } from 'src/user/user.module';
     JwtAuthGuard,
     {
       provide: 'APP_GUARD',
-      useClass: JwtAuthGuard,
+      useClass: JwtOrApiKeyGuard,
     },
     ApiKeyGuard,
   ],
   exports: [AuthService, ApiKeyGuard],
 })
-export class AuthModule {}
+export class AuthModule { }

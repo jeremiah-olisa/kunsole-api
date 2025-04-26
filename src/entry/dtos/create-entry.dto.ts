@@ -8,6 +8,7 @@ import {
   IsDate,
 } from 'class-validator';
 import { EntryType } from '@prisma/client';
+import { Type } from 'class-transformer';
 
 export class CreateEntryDto {
   @ApiProperty({
@@ -38,13 +39,13 @@ export class CreateEntryDto {
   @IsOptional()
   metadata?: any;
 
-  @ApiProperty({
-    description: 'The ID of the application this entry belongs to.',
-    example: 'app123',
-  })
-  @IsString()
-  @IsNotEmpty()
-  appId: string;
+  // @ApiProperty({
+  //   description: 'The ID of the application this entry belongs to.',
+  //   example: 'app123',
+  // })
+  // @IsString()
+  // @IsNotEmpty()
+  // appId: string;
 
   @ApiProperty({
     description:
@@ -52,5 +53,6 @@ export class CreateEntryDto {
     example: '2023-04-15T10:00:00Z',
   })
   @IsDate()
+  @Type(() => Date)
   loggedAt: Date = new Date();
 }

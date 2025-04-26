@@ -6,12 +6,11 @@ import {
   Query,
   Param,
   Patch,
-  UseGuards,
   Req,
+  BadRequestException,
 } from '@nestjs/common';
 import { Request } from 'express';
 import {
-  ApiBearerAuth,
   ApiTags,
   ApiOperation,
   ApiResponse,
@@ -19,7 +18,7 @@ import {
   ApiQuery,
   ApiParam,
 } from '@nestjs/swagger';
-import { SwaggerAuthenticated } from 'src/auth/decorators/swagger-auth.decorator';
+import { SwaggerApiKey, SwaggerAuthenticated } from 'src/auth/decorators/swagger-auth.decorator';
 import { EntryService } from './entry.service';
 import { CreateEntryDto } from './dtos/create-entry.dto';
 import {
@@ -27,13 +26,14 @@ import {
   PaginatedResultEntryResponseDto,
 } from './dtos/entry-response.dto';
 import { UserEntity } from 'src/auth/entities/user.entity';
-import { ListEntriesDto, ListEntriesQuery } from './dtos/list-entries.dto';
+import { ListEntriesQuery } from './dtos/list-entries.dto';
+import { App } from '@prisma/client';
 
 @ApiTags('Entries')
 @Controller('entries')
 @SwaggerAuthenticated()
 export class EntryController {
-  constructor(private readonly entryService: EntryService) {}
+  constructor(private readonly entryService: EntryService) { }
 
   @Post()
   @ApiOperation({ summary: 'Create a new log entry' })
@@ -47,14 +47,16 @@ export class EntryController {
     @Body() createEntryDto: CreateEntryDto,
     @Req() req: Request,
   ): Promise<EntryResponseDto> {
-    const user = new UserEntity(req.user);
+    const publicKey = req.headers['x-api-key'] as string;
 
-    return this.entryService.createEntry(createEntryDto, user.getUserId());
+    return this.entryService.createEntry({
+      ...createEntryDto,
+      // appId: app?.id,
+    }, publicKey);
   }
 
   @Get()
   @ApiOperation({ summary: 'List entries with filters' })
-  @ApiQuery({ type: ListEntriesQuery })
   @ApiResponse({
     status: 200,
     description: 'List of entries',

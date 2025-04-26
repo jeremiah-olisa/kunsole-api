@@ -91,7 +91,6 @@ export class AuthService {
 
     // Compare the provided secret key with the stored hashed secret key
     return bcrypt.compare(secretKey, appSecretKey);
-
   }
 
   async validateOAuthUser(

@@ -12,19 +12,19 @@ export class EntryService {
   constructor(
     private readonly entryRepository: EntryRepository,
     private readonly userAppService: UserAppService,
-  ) {}
+  ) { }
 
   async createEntry(
     dto: CreateEntryDto,
-    userId: string,
+    publicKey: string,
   ): Promise<EntryResponseDto> {
     const entry = await this.entryRepository.create({
       type: dto.type,
       content: dto.content,
       metadata: dto.metadata,
       loggedAt: dto.loggedAt,
-      user: { connect: { id: userId } },
-      app: { connect: { id: dto.appId } },
+      // user: { connect: { id: userId } },
+      app: { connect: { publicKey } },
     });
 
     return this.toResponseDto(entry);

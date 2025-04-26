@@ -34,6 +34,14 @@ export class AppService {
     return data?.name;
   }
 
+  async getAppByPublicKey(appId: string) {
+    const data = await this.appRepository.findByPublicKey(appId);
+
+    if (!data) throw new NotFoundException('App not found');
+
+    return data;
+  }
+
   async createApp(
     createAppDto: CreateAppDto,
     userId: string,

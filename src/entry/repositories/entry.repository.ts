@@ -15,7 +15,7 @@ import {
 
 @Injectable()
 export class EntryRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async create(data: Prisma.EntryCreateInput): Promise<Entry> {
     return this.prisma.entry.create({ data });
@@ -49,18 +49,7 @@ export class EntryRepository {
     const direction = pagination?.direction || 'forward';
     const cursor = pagination?.cursor ? { id: pagination.cursor } : undefined;
 
-    const where: Prisma.EntryWhereInput = {
-      ...(filters.type && { type: filters.type }),
-      ...(filters.appId && { appId: filters.appId }),
-      ...(filters.userId && { userId: filters.userId }),
-      ...(filters.fromDate && {
-        loggedAt: { gte: new Date(filters.fromDate) },
-      }),
-      ...(filters.toDate && { loggedAt: { lte: new Date(filters.toDate) } }),
-      ...(typeof filters.isRead === 'boolean' && {
-        readAt: filters.isRead ? { not: null } : null,
-      }),
-    };
+    const where: Prisma.EntryWhereInput = this.filterEntries(filters);
 
     const [items, total] = await Promise.all([
       this.prisma.entry.findMany({
@@ -84,4 +73,33 @@ export class EntryRepository {
       total,
     } as PaginatedResultEntryEntity;
   }
+
+  private filterEntries(filters: IEntryFilters): Prisma.EntryWhereInput {
+    const whereInput: Prisma.EntryWhereInput = {};
+
+    // Apply filters based on presence of the corresponding filter value
+    if (filters.type) whereInput.type = filters.type;
+    if (filters.appId) whereInput.appId = filters.appId;
+
+    if (filters.userId) {
+      whereInput.OR = [
+        { userId: filters.userId },
+        { app: { userApp: { some: { userId: filters.userId } } } }
+      ];
+    }
+
+    if (filters.fromDate || filters.toDate) {
+      whereInput.loggedAt = {
+        ...(filters.fromDate && { gte: new Date(filters.fromDate) }),
+        ...(filters.toDate && { lte: new Date(filters.toDate) })
+      };
+    }
+
+    if (typeof filters.isRead === 'boolean') {
+      whereInput.readAt = filters.isRead ? { not: null } : null;
+    }
+
+    return whereInput;
+  }
+
 }
