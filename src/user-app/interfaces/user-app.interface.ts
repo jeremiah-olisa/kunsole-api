@@ -7,5 +7,6 @@ export interface IUserAppInvite {
     appId: string;
     role: AppUserRole;
     invitedBy: string;
+    invitedByUserId: string;
     expiresAt: Date;
 }

@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en" style="color-scheme: light dark; supported-color-schemes: light dark;">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Invitation Declined</title>
+    <style>
+        /* Reset */
+        body,
+        table,
+        td,
+        a {
+            -webkit-text-size-adjust: 100%;
+            -ms-text-size-adjust: 100%;
+        }
+
+        table,
+        td {
+            mso-table-rspace: 0pt;
+            mso-table-lspace: 0pt;
+        }
+
+        img {
+            -ms-interpolation-mode: bicubic;
+            border: 0;
+            height: auto;
+            line-height: 100%;
+            outline: none;
+            text-decoration: none;
+        }
+
+        table {
+            border-collapse: collapse !important;
+        }
+
+        body {
+            margin: 0 !important;
+            padding: 0 !important;
+            width: 100% !important;
+        }
+
+        /* Colors */
+        :root {
+            --background: hsl(0 0% 100%);
+            --foreground: hsl(0 0% 3.9%);
+            --card: hsl(0 0% 100%);
+            --primary: hsl(0 0% 9%);
+            --secondary: hsl(0 0% 96.1%);
+        }
+
+        @media (prefers-color-scheme: dark) {
+            :root {
+                --background: hsl(0 0% 3.9%);
+                --foreground: hsl(0 0% 98%);
+                --card: hsl(0 0% 3.9%);
+                --primary: hsl(0 0% 98%);
+                --secondary: hsl(0 0% 14.9%);
+            }
+        }
+
+        /* Base Styles */
+        body {
+            background-color: var(--background);
+            color: var(--foreground);
+            font-family: 'Helvetica Neue', Helvetica, Arial, sans-serif;
+        }
+
+        .email-container {
+            max-width: 600px;
+            margin: auto;
+            background: var(--card);
+            border-radius: 8px;
+            overflow: hidden;
+            border: 1px solid var(--secondary);
+        }
+
+        .email-header {
+            background: var(--secondary);
+            padding: 20px;
+            text-align: center;
+        }
+
+        .email-header img {
+            width: 100%;
+            max-width: 200px;
+            height: auto;
+        }
+
+        .email-body {
+            padding: 30px 20px;
+            text-align: left;
+        }
+
+        .email-body h1 {
+            margin-top: 0;
+            font-size: 24px;
+            color: var(--primary);
+        }
+
+        .email-body p {
+            font-size: 16px;
+            line-height: 1.5;
+            margin-bottom: 20px;
+        }
+
+        .email-footer {
+            background: var(--secondary);
+            padding: 20px;
+            text-align: center;
+            font-size: 14px;
+            color: var(--foreground);
+        }
+
+        @media screen and (max-width: 600px) {
+            .email-body {
+                padding: 20px 15px;
+            }
+
+            .email-header img {
+                max-width: 150px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="email-container">
+        <div class="email-header">
+            <img src="https://blobs.vusercontent.net/blob/svgviewer-output-S1nKEzNaz4j6V9uHbBOjCMFbRQRgUC.svg"
+                alt="Kunsole Logo" />
+        </div>
+        <div class="email-body">
+            <h1>Invitation Declined</h1>
+            <p>Hello,</p>
+            <p>Unfortunately, <strong>{{inviteeEmail}}</strong> has declined your invitation to collaborate on
+                <strong>{{appName}}</strong>.</p>
+            <p>If you'd like, you can reach out to them directly or send an invitation to someone else.</p>
+            <p>Thanks for using Kunsole!</p>
+            <p>Best regards,<br>The Kunsole Team</p>
+        </div>
+        <div class="email-footer">
+            &copy; {{year}} Kunsole. All rights reserved.
+        </div>
+    </div>
+</body>
+
+</html>
