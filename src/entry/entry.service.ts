@@ -5,7 +5,7 @@ import { EntryResponseDto } from './dtos/entry-response.dto';
 import { ListEntriesDto } from './dtos/list-entries.dto';
 import { EntryRepository } from './repositories/entry.repository';
 import { IKeysetPaginationParams } from 'src/common/interfaces/pagination.interface';
-import { UserAppService } from 'src/user-app/user-app.service';
+import { UserAppService } from 'src/app/user-app/user-app.service';
 
 @Injectable()
 export class EntryService {

@@ -15,7 +15,7 @@ import { AppRepository } from './repositories/app.repository';
 import { AppEntity } from './entities/app.entity/app.entity';
 import { CreateAppDto } from './dtos/create-app.dto/create-app.dto';
 import { UpdateAppDto } from './dtos/update-app.dto/update-app.dto';
-import { UserAppService } from 'src/user-app/user-app.service';
+import { UserAppService } from 'src/app/user-app/user-app.service';
 import { PlanService } from 'src/plan/plan.service';
 import { PaymentFilters } from 'src/payment/interfaces';
 import { PaymentService } from 'src/payment/payment.service';

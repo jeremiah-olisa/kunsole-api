@@ -3,7 +3,7 @@ import { AppUserRole, PaymentProvider } from '@prisma/client';
 import { PrismaClientTransaction } from 'src/common/types';
 import { SubscriptionRepository } from './repositories/subscription.repository';
 import { PaymentService } from 'src/payment/payment.service';
-import { UserAppService } from 'src/user-app/user-app.service';
+import { UserAppService } from 'src/app/user-app/user-app.service';
 import { CreateSubscriptionDto } from './dtos/create-subscription.dto';
 
 @Injectable()
