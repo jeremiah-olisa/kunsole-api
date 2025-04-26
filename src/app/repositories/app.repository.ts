@@ -27,6 +27,13 @@ export class AppRepository {
     });
   }
 
+  async getAppNameById(id: string) {
+    return this.prisma.app.findFirst({
+      where: { OR: [{ id }, { publicKey: id }] },
+      select: { name: true },
+    });
+  }
+
   async findByPublicKey(publicKey: string): Promise<App | null> {
     return this.prisma.app.findUnique({
       where: { publicKey },

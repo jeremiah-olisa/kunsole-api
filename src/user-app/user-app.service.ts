@@ -17,6 +17,7 @@ import { IUserAppInvite } from './interfaces/user-app.interface';
 import { AppRepository } from 'src/app/repositories/app.repository';
 import { UserService } from 'src/user/user.service';
 import { AppService } from 'src/app/app.service';
+import { UserAppInviteMailable } from './mails/mailable/user-app-invite.mailable';
 
 @Injectable()
 export class UserAppService {
@@ -45,7 +46,7 @@ export class UserAppService {
       throw new ConflictException('You cannot invite yourself');
 
     const existingAccess = await this.userAppRepository.userHasAccessToApp(existingUserId, appId);
-    
+
     if (existingAccess) {
       throw new ConflictException('User already has access to this app');
     }
@@ -54,11 +55,17 @@ export class UserAppService {
     const token = TokenGenerator.generateToken();
     const expiresAt = new Date(Date.now() + this.INVITATION_TTL * 1000);
 
+    // Send invitation email
+    const appName = await this.appService.getAppNameById(appId);
+    const invitedBy = await this.userService.getUserNameById(invitedByUserId);
+
     const invitation: IUserAppInvite = {
+      appName,
       email,
       appId,
+      invitedBy,
       role,
-      invitedBy: invitedByUserId,
+      token,
       expiresAt,
     };
 
@@ -68,19 +75,8 @@ export class UserAppService {
       this.INVITATION_TTL,
     );
 
-    // Send invitation email
-    const app = await this.appService.findAppById(appId);
-    const inviter = await this.userService.getUserNameById(invitedByUserId);
 
-    // {
-    //   to: email,
-    //   appName: app.name,
-    //   inviterName: inviter.fullName,
-    //   role,
-    //   token,
-    //   expiresAt,
-    // }
-    await this.mailService.send();
+    await this.mailService.send(new UserAppInviteMailable(invitation));
 
   }
 

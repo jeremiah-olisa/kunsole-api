@@ -9,7 +9,7 @@ import { constants } from 'fs';
 export class TemplateService {
     private templateCache = new Map<string, HandlebarsTemplateDelegate>();
 
-    constructor(private configService: ConfigService) { }
+    constructor() { }
 
     async render(templatePath: string, data: any): Promise<string> {
         let template = this.templateCache.get(templatePath);
@@ -18,14 +18,14 @@ export class TemplateService {
         if (!templatePath.endsWith('.hbs'))
             templatePath += '.hbs';
 
-        const fullPath = join(
-            this.configService.get('MAIL_TEMPLATE_PATH', 'resources/views/mail'),
-            templatePath
-        );
+        // const fullPath = join(
+        //     this.configService.get('MAIL_TEMPLATE_PATH', 'resources/views/mail'),
+        //     templatePath
+        // );
 
-        await this.fileExistsOrThrow(fullPath);
+        await this.fileExistsOrThrow(templatePath);
 
-        const source = await readFile(fullPath, 'utf-8');
+        const source = await readFile(templatePath, 'utf-8');
 
         template = compileTemplate(source);
         this.templateCache.set(templatePath, template);

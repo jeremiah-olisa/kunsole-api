@@ -13,12 +13,12 @@ export class CacheService implements ICacheProvider {
     async get<T>(key: string): Promise<T | null> {
         return this.provider.get<T>(key);
     }
- 
+
     async exists(key: string): Promise<boolean> {
         return this.provider.exists(key);
     }
 
-    async set(key: string, value: any, ttl?: number): Promise<void> {
+    async set<T>(key: string, value: T, ttl?: number): Promise<void> {
         return this.provider.set(key, value, ttl);
     }
 
@@ -26,8 +26,8 @@ export class CacheService implements ICacheProvider {
         return this.provider.del(key);
     }
 
-    async remember(key: string, ttl: number, callback: () => Promise<any>): Promise<any> {
-        const cached = await this.get(key);
+    async remember<T>(key: string, ttl: number, callback: () => Promise<T>): Promise<T> {
+        const cached = await this.get<T>(key);
         if (cached) return cached;
 
         const result = await callback();

@@ -30,7 +30,7 @@ export class UserRepository {
           { userKey: id }
         ],
       },
-      select: { id: true, fullName: true },
+      select: { fullName: true },
     });
 
     return result;

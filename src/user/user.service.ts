@@ -43,7 +43,7 @@ export class UserService {
         if (!data) {
             throw new NotFoundException('User not found');
         }
-        return data;
+        return data.fullName;
     }
 
     async getUserIdByEmail(email: string) {

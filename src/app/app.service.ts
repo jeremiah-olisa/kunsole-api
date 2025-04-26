@@ -33,6 +33,14 @@ export class AppService {
     return this.appRepository.findById(appId);
   }
 
+  async getAppNameById(appId: string) {
+    const data = await this.appRepository.getAppNameById(appId);
+
+    if (!data) throw new NotFoundException('App not found');
+
+    return data?.name;
+  }
+
   async createApp(
     createAppDto: CreateAppDto,
     userId: string,
