@@ -4,7 +4,7 @@ import { PassportModule } from '@nestjs/passport';
 // import { UserModule } from '../user/user.module';
 import { AuthController } from './auth.controller';
 import { AuthService } from './auth.service';
-import { AuthRepository } from './auth.repository';
+import { UserRepository } from '../user/repositories/user.repository';
 import { ApiKeyGuard } from './guards/api-key.guard';
 import { JwtAuthGuard } from './guards/jwt-auth.guard';
 import { JwtStrategy } from './strategies/jwt.strategy';
@@ -13,12 +13,11 @@ import { LocalStrategy } from './strategies/local.strategy';
 import { GoogleStrategy } from './strategies/google.strategy';
 import { GithubStrategy } from './strategies/github.strategy';
 import { PrismaService } from 'nestjs-prisma';
-import { ForgotPasswordController } from './forgot-password/forgot-password.controller';
-import { ResetPasswordController } from './reset-password/reset-password.controller';
+import { UserModule } from 'src/user/user.module';
 
 @Module({
   imports: [
-    // UserModule,
+    UserModule,
     PassportModule,
     Reflector,
     JwtModule.register({
@@ -26,11 +25,11 @@ import { ResetPasswordController } from './reset-password/reset-password.control
       signOptions: { expiresIn: '1h' },
     }),
   ],
-  controllers: [AuthController, ForgotPasswordController, ResetPasswordController],
+  controllers: [AuthController],
   providers: [
     PrismaService,
     AuthService,
-    AuthRepository,
+    UserRepository,
     LocalStrategy,
     JwtStrategy,
     GoogleStrategy,

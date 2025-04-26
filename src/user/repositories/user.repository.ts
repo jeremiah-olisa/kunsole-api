@@ -1,24 +1,39 @@
 import { Injectable } from '@nestjs/common';
 import { User, AuthProvider } from '@prisma/client';
-import { OAuthUserPayload } from './interfaces/auth.interface';
-import * as bcrypt from 'bcrypt';
+import { OAuthUserPayload } from '../../auth/interfaces/auth.interface';
 import { PrismaService } from 'nestjs-prisma';
+import { ICreateUserPayload } from '../interfaces/user.interface';
 
 @Injectable()
-export class AuthRepository {
-  constructor(private readonly prisma: PrismaService) {}
+export class UserRepository {
+  constructor(private readonly prisma: PrismaService) { }
 
-  async createUser(data: {
-    email: string;
-    fullName: string;
-    password: string;
-    provider: AuthProvider;
-  }): Promise<User> {
+  async createUser(data: ICreateUserPayload): Promise<User> {
     return this.prisma.user.create({ data });
   }
 
   async findUserByEmail(email: string): Promise<User | null> {
     return this.prisma.user.findUnique({ where: { email } });
+  }
+
+  async getUserIdByEmail(email: string) {
+    const result = await this.prisma.user.findUnique({ where: { email }, select: { id: true } });
+
+    return result?.id;
+  }
+
+  async getUserNameById(id: string) {
+    const result = await this.prisma.user.findFirst({
+      where: {
+        OR: [
+          { id },
+          { userKey: id }
+        ],
+      },
+      select: { id: true, fullName: true },
+    });
+
+    return result;
   }
 
   async userExistsByEmail(email: string): Promise<boolean> {
@@ -62,17 +77,12 @@ export class AuthRepository {
     });
   }
 
-  async validateApiKeys(
-    publicKey: string,
-    secretKey: string,
-  ): Promise<boolean> {
+  async getSecretKeyForValidationByPublicKey(publicKey: string): Promise<string | null> {
     const app = await this.prisma.app.findUnique({
       where: { publicKey },
       select: { secretKey: true },
     });
 
-    if (!app) return false;
-
-    return bcrypt.compare(secretKey, app.secretKey);
+    return app?.secretKey ?? null;
   }
 }

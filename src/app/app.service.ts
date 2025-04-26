@@ -15,10 +15,11 @@ import { AppRepository } from './repositories/app.repository';
 import { AppEntity } from './entities/app.entity/app.entity';
 import { CreateAppDto } from './dtos/create-app.dto/create-app.dto';
 import { UpdateAppDto } from './dtos/update-app.dto/update-app.dto';
-import { UserAppService } from 'src/app/user-app/user-app.service';
+import { UserAppService } from 'src/user-app/user-app.service';
 import { PlanService } from 'src/plan/plan.service';
 import { PaymentFilters } from 'src/payment/interfaces';
 import { PaymentService } from 'src/payment/payment.service';
+import { PrismaClientTransaction } from 'src/common/types';
 
 @Injectable()
 export class AppService {
@@ -26,38 +27,36 @@ export class AppService {
     private readonly appRepository: AppRepository,
     private readonly userAppService: UserAppService,
     private readonly paymentService: PaymentService,
-  ) {}
+  ) { }
+
+  findAppById(appId: string) {
+    return this.appRepository.findById(appId);
+  }
 
   async createApp(
     createAppDto: CreateAppDto,
     userId: string,
+    tx?: PrismaClientTransaction
   ): Promise<AppEntity> {
     const publicKey = this.generateKey(16, 'kunsole_pk');
     const secretKey = this.generateKey(32, 'kunsole_sk');
     const hashedSecretKey = await bcrypt.hash(secretKey, 10);
 
-    // NOTE: if free plan becomes time limited make planId
-    return this.appRepository.$transaction(async (tx) => {
-      const app = await this.appRepository.create({
-        ...createAppDto,
-        publicKey,
-        secretKey: hashedSecretKey,
-        plan: { connect: { id: createAppDto.planId } },
-      });
-
-      await this.userAppService.create(
-        {
-          appId: app.id,
+    const app = await this.appRepository.create({
+      ...createAppDto,
+      publicKey,
+      secretKey: hashedSecretKey,
+      userApp: {
+        create: {
           userId,
-          role: AppUserRole.OWNER,
-        },
-        tx,
-      );
+          role: AppUserRole.OWNER
+        }
+      }
+    }, tx);
 
-      return new AppEntity({
-        ...app,
-        secretKey, // Only returned once during creation
-      });
+    return new AppEntity({
+      ...app,
+      secretKey, // Only returned once during creation
     });
   }
 

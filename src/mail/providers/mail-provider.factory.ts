@@ -5,7 +5,7 @@ import { MailtrapProvider } from './mailtrap.provider';
 import { PostmarkProvider } from './postmark.provider';
 import { ConfigService } from '@nestjs/config';
 import { ModuleRef } from '@nestjs/core';
-import { getClassName } from 'src/common/utils';
+
 
 @Injectable()
 export class MailProviderFactory {

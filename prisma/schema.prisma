@@ -59,8 +59,6 @@ model App {
   createdAt     DateTime       @default(now())
   updatedAt     DateTime       @updatedAt
   isActive      Boolean        @default(true)
-  planId        String         @db.ObjectId
-  plan          Plan           @relation(fields: [planId], references: [id])
   entries       Entry[]
   userApp       UserApp[]
 }
@@ -130,7 +128,6 @@ model Plan {
   features           Json // Additional features as JSON
   createdAt          DateTime       @default(now())
   updatedAt          DateTime       @updatedAt
-  apps               App[]
   subscritions       Subscription[]
 }
 

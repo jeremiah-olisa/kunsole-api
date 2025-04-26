@@ -5,7 +5,7 @@ import { FlutterwaveProvider } from './flutterwave.provider';
 import { IPaymentProvider } from '../interfaces/payment-provider.interface';
 import { PaymentProvider } from '@prisma/client';
 import { ModuleRef } from '@nestjs/core';
-import { getClassName } from 'src/common/utils';
+
 
 @Injectable()
 export class PaymentProviderFactory {

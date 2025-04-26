@@ -1,7 +1,7 @@
 import { Injectable, UnauthorizedException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { AuthRepository } from './auth.repository';
+import { UserRepository } from '../user/repositories/user.repository';
 import { AuthProvider, User } from '@prisma/client';
 import { OAuthUserPayload } from './interfaces/auth.interface';
 import { Request } from 'express';
@@ -9,17 +9,18 @@ import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { RegisterDto } from './dtos/register.dto';
 import { TokenDto } from './dtos/token.dto';
 import { UserEntity } from './entities/user.entity';
+import { UserService } from 'src/user/user.service';
 
 @Injectable()
 export class AuthService {
   constructor(
     private readonly jwtService: JwtService,
-    private readonly authRepository: AuthRepository,
-  ) {}
+    private readonly userService: UserService,
+  ) { }
 
   async register(registerDto: RegisterDto): Promise<User> {
     const hashedPassword = await bcrypt.hash(registerDto.password, 10);
-    return this.authRepository.createUser({
+    return this.userService.createUser({
       ...registerDto,
       password: hashedPassword,
       provider: AuthProvider.PASSWORD,
@@ -33,7 +34,7 @@ export class AuthService {
   async googleLogin(userEntity: UserEntity): Promise<TokenDto> {
     this.validateUserEntityOrThrow(userEntity);
 
-    const user = await this.authRepository.findOrCreateOAuthUser(
+    const user = await this.userService.findOrCreateOAuthUser(
       userEntity as OAuthUserPayload,
       AuthProvider.GOOGLE,
     );
@@ -44,7 +45,7 @@ export class AuthService {
   async githubLogin(userEntity: UserEntity): Promise<TokenDto> {
     this.validateUserEntityOrThrow(userEntity);
 
-    const user = await this.authRepository.findOrCreateOAuthUser(
+    const user = await this.userService.findOrCreateOAuthUser(
       userEntity as OAuthUserPayload,
       AuthProvider.GITHUB,
     );
@@ -55,7 +56,7 @@ export class AuthService {
   async refreshToken(refreshToken: string): Promise<TokenDto> {
     try {
       const payload = this.jwtService.verify(refreshToken);
-      const user = await this.authRepository.findUserByUserKey(payload.sub);
+      const user = await this.userService.findUserByUserKey(payload.sub);
 
       if (!user || user.refreshToken !== refreshToken) {
         throw new UnauthorizedException('Invalid refresh token');
@@ -68,7 +69,7 @@ export class AuthService {
   }
 
   async validateUser(email: string, password: string): Promise<User | null> {
-    const user = await this.authRepository.findUserByEmail(email);
+    const user = await this.userService.findUserByEmail(email);
 
     if (user && user.provider === AuthProvider.PASSWORD) {
       const isMatch = await bcrypt.compare(password, user.password);
@@ -79,18 +80,25 @@ export class AuthService {
   }
 
   async validateUserByUserKey(userKey: string): Promise<User | null> {
-    return this.authRepository.findUserByUserKey(userKey);
+    return this.userService.findUserByUserKey(userKey);
   }
 
+
   async validateApiKey(publicKey: string, secretKey: string): Promise<boolean> {
-    return this.authRepository.validateApiKeys(publicKey, secretKey);
+    // Check if the app exists by public key
+    const appSecretKey = await this.userService.getSecretKeyForValidationByPublicKey(publicKey);
+
+
+    // Compare the provided secret key with the stored hashed secret key
+    return bcrypt.compare(secretKey, appSecretKey);
+
   }
 
   async validateOAuthUser(
     userData: OAuthUserPayload,
     provider: AuthProvider,
   ): Promise<User> {
-    return this.authRepository.findOrCreateOAuthUser(userData, provider);
+    return this.userService.findOrCreateOAuthUser(userData, provider);
   }
 
   private validateUserEntityOrThrow(userEntity: UserEntity) {
@@ -109,7 +117,7 @@ export class AuthService {
     const accessToken = this.jwtService.sign(payload);
     const refreshToken = this.jwtService.sign(payload, { expiresIn: '7d' });
 
-    await this.authRepository.updateRefreshToken(user.userKey, refreshToken);
+    await this.userService.updateRefreshToken(user.userKey, refreshToken);
 
     return {
       accessToken,

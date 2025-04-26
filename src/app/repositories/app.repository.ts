@@ -10,10 +10,11 @@ import {
   PAGINATION_SIZE_DEFAULT_LIMIT,
   PAGINATION_SIZE_MAX_LIMIT,
 } from 'src/common/constants/pagination.constant';
+import { PrismaClientTransaction } from 'src/common/types';
 
 @Injectable()
 export class AppRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async $transaction<T>(fn: (tx: Prisma.TransactionClient) => Promise<T>) {
     return this.prisma.$transaction(fn);
@@ -32,8 +33,10 @@ export class AppRepository {
     });
   }
 
-  async create(data: Prisma.AppCreateInput): Promise<App> {
-    return this.prisma.app.create({
+  async create(data: Prisma.AppCreateInput, tx?: PrismaClientTransaction): Promise<App> {
+    const client = tx || this.prisma;
+
+    return client.app.create({
       data,
       include: this.getIncludeOptions(true),
     });
@@ -77,7 +80,6 @@ export class AppRepository {
         take: direction === 'forward' ? limit : -limit,
         skip: cursor ? 1 : 0,
         include: {
-          plan: true,
           userApp: {
             where: { userId },
             select: { role: true },
@@ -128,13 +130,13 @@ export class AppRepository {
   private getIncludeOptions(include: boolean) {
     return include
       ? {
-          plan: true,
-          userApp: {
-            include: {
-              user: true,
-            },
+        plan: true,
+        userApp: {
+          include: {
+            user: true,
           },
-        }
+        },
+      }
       : undefined;
   }
 }
