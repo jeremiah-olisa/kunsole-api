@@ -11,7 +11,7 @@ import { PrismaClientTransaction } from 'src/common/types';
 
 @Injectable()
 export class UserAppRepository {
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) { }
 
   async createUserApp(
     data: {
@@ -98,11 +98,7 @@ export class UserAppRepository {
         skip: cursor ? 1 : 0,
         orderBy: { createdAt: 'desc' },
         include: {
-          app: {
-            include: {
-              plan: true,
-            },
-          },
+          app: true,
         },
       }),
       client.userApp.count({ where: { userId } }),

@@ -41,7 +41,7 @@ import { UserEntity } from 'src/auth/entities/user.entity';
 @SwaggerAuthenticated()
 @UseGuards(JwtAuthGuard)
 export class UserAppController {
-  constructor(private readonly userAppService: UserAppService) {}
+  constructor(private readonly userAppService: UserAppService) { }
 
   @Post()
   @ApiOperation({ summary: 'Create user-app relationship' })
@@ -49,11 +49,10 @@ export class UserAppController {
   @ApiResponse({
     status: 201,
     description: 'Relationship created',
-    type: UserAppResponseDto,
   })
   async create(
     @Body() createDto: CreateUserAppDto,
-  ): Promise<UserAppResponseDto> {
+  ) {
     return this.userAppService.create(createDto);
   }
 
