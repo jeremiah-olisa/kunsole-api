@@ -8,10 +8,14 @@ export class RedisProvider implements ICacheProvider {
     private client: RedisClientType;
 
     constructor(private configService: ConfigService) {
-        this.client = createClient({
-            url: this.configService.get('REDIS_URL'),
-        });
-        this.client.connect();
+        try {
+            this.client = createClient({
+                url: this.configService.get('REDIS_URL'),
+            });
+            this.client.connect();
+        } catch (error) {
+            console.log('Redis connection error:', error);
+        }
     }
 
     async exists(key: string): Promise<boolean> {

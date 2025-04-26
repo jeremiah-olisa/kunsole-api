@@ -6,9 +6,10 @@ import { UserAppController } from './user-app.controller';
 import { MailModule } from 'src/mail/mail.module';
 import { CacheModule } from 'src/cache/cache.module';
 import { AppModule } from 'src/app/app.module';
+import { UserModule } from 'src/user/user.module';
 
 @Module({
-  imports: [CacheModule, MailModule, AppModule],
+  imports: [CacheModule, MailModule, AppModule, UserModule],
   providers: [UserAppService, UserAppRepository, PrismaService],
   controllers: [UserAppController],
   exports: [UserAppService],

@@ -5,10 +5,9 @@ import { PlanModule } from 'src/plan/plan.module';
 import { AppRepository } from './repositories/app.repository';
 import { PrismaService } from 'nestjs-prisma';
 import { PaymentModule } from 'src/payment/payment.module';
-import { UserAppController } from '../user-app/user-app.controller';
 
 @Module({
-  imports: [PlanModule, PaymentModule],
+  imports: [],
   controllers: [AppController],
   providers: [AppService, AppRepository, PrismaService],
   exports: [AppService],

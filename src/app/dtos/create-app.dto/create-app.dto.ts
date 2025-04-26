@@ -20,12 +20,4 @@ export class CreateAppDto {
   @IsString()
   @MaxLength(500)
   description?: string;
-
-  @ApiProperty({
-    example: '507f1f77bcf86cd799439011',
-    description: 'Plan ID for the application',
-  })
-  @IsOptional()
-  @IsString()
-  planId?: string;
 }
