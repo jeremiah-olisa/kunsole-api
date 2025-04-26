@@ -18,13 +18,15 @@ export class AuthService {
     private readonly userService: UserService,
   ) { }
 
-  async register(registerDto: RegisterDto): Promise<User> {
+  async register(registerDto: RegisterDto) {
     const hashedPassword = await bcrypt.hash(registerDto.password, 10);
-    return this.userService.createUser({
+    const user = await this.userService.createUser({
       ...registerDto,
       password: hashedPassword,
       provider: AuthProvider.PASSWORD,
     });
+
+    return this.login(user);
   }
 
   async login(user: User): Promise<TokenDto> {
