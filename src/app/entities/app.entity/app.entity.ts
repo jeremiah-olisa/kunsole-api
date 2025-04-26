@@ -45,11 +45,11 @@ export class AppEntity implements PrismaApp {
   })
   updatedAt: Date;
 
-  @ApiProperty({ example: '507f1f77bcf86cd799439011', description: 'Plan ID' })
-  planId: string;
+  // @ApiProperty({ example: '507f1f77bcf86cd799439011', description: 'Plan ID' })
+  // planId: string;
 
   // @ApiProperty({ type: Plan, required: false })
-  plan: Plan | null;
+  // plan: Plan | null;
 
   // @ApiProperty({ type: [UserApp], required: false })
   userApp?: UserApp[] | null;
