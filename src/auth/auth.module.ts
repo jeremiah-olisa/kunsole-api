@@ -13,6 +13,8 @@ import { LocalStrategy } from './strategies/local.strategy';
 import { GoogleStrategy } from './strategies/google.strategy';
 import { GithubStrategy } from './strategies/github.strategy';
 import { PrismaService } from 'nestjs-prisma';
+import { ForgotPasswordController } from './forgot-password/forgot-password.controller';
+import { ResetPasswordController } from './reset-password/reset-password.controller';
 
 @Module({
   imports: [
@@ -24,7 +26,7 @@ import { PrismaService } from 'nestjs-prisma';
       signOptions: { expiresIn: '1h' },
     }),
   ],
-  controllers: [AuthController],
+  controllers: [AuthController, ForgotPasswordController, ResetPasswordController],
   providers: [
     PrismaService,
     AuthService,

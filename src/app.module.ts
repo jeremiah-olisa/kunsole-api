@@ -7,6 +7,7 @@ import { SubscriptionModule } from './subscription/subscription.module';
 import { PaymentModule } from './payment/payment.module';
 import { UserAppModule } from './user-app/user-app.module';
 import { EntryModule } from './entry/entry.module';
+import { MailModule } from './mail/mail.module';
 
 @Module({
   imports: [
@@ -20,6 +21,7 @@ import { EntryModule } from './entry/entry.module';
     SubscriptionModule,
     PaymentModule,
     EntryModule,
+    MailModule,
   ],
   providers: [],
 })
