@@ -12,38 +12,38 @@ export interface TokenPayload {
 }
 
 export interface IGoogleOauthResponse {
-  id: string
-  displayName: string
-  name: IGoogleOauthName
-  emails: IGoogleOauthEmail[]
-  photos: IGoogleOauthPhoto[]
-  provider: string
-  _raw: string
-  _json: IGoogleOauthJson
+  id: string;
+  displayName: string;
+  name: IGoogleOauthName;
+  emails: IGoogleOauthEmail[];
+  photos: IGoogleOauthPhoto[];
+  provider: string;
+  _raw: string;
+  _json: IGoogleOauthJson;
 }
 
 export interface IGoogleOauthName {
-  familyName: string
-  givenName: string
+  familyName: string;
+  givenName: string;
 }
 
 export interface IGoogleOauthEmail {
-  value: string
-  verified: boolean
+  value: string;
+  verified: boolean;
 }
 
 export interface IGoogleOauthPhoto {
-  value: string
+  value: string;
 }
 
 export interface IGoogleOauthJson {
-  sub: string
-  name: string
-  given_name: string
-  family_name: string
-  picture: string
-  email: string
-  email_verified: boolean
+  sub: string;
+  name: string;
+  given_name: string;
+  family_name: string;
+  picture: string;
+  email: string;
+  email_verified: boolean;
 }
 
 export interface IGithubOAuthResponse {
