@@ -27,6 +27,7 @@ import { PaginatedResult } from 'src/common/entities/pagination.entity';
 import { UpdatePlanDto } from './dtos/update-plan.dto';
 import { PlanEntity } from './entities/plan.entity';
 import { PlanType } from '@prisma/client';
+import { IPaginatedResult } from 'src/common/interfaces/pagination.interface';
 
 @ApiTags('Plans')
 @ApiBearerAuth()
@@ -57,7 +58,7 @@ export class PlanController {
   })
   async findAll(
     @Query() pagination: any,
-  ): Promise<PaginatedResult<PlanResponseDto>> {
+  ): Promise<IPaginatedResult<PlanResponseDto>> {
     return this.planService.getAllPlans(pagination);
   }
 

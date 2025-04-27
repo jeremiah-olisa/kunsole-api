@@ -45,6 +45,20 @@ export class EntryEntity implements PrismaEntry {
   appId: string;
 
   @ApiProperty({
+    description: 'The recipient of the entry (if applicable)',
+    required: false,
+    example: 'user@example.com',
+  })
+  recipient: string | null;
+
+  @ApiProperty({
+    description: 'The subject of the entry (if applicable)',
+    required: false,
+    example: 'Important Notification',
+  })
+  subject: string | null;
+
+  @ApiProperty({
     description: 'Timestamp when the entry was created',
     example: '2023-04-15T10:00:00Z',
   })

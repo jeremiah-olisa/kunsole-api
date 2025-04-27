@@ -7,7 +7,7 @@ import { OAuthUserPayload } from './interfaces/auth.interface';
 import { Request } from 'express';
 import { JwtPayload } from './interfaces/jwt-payload.interface';
 import { RegisterDto } from './dtos/register.dto';
-import { TokenDto } from './dtos/token.dto';
+import { AuthenticationUserResponseDto } from './dtos/authentication-user-response.dto';
 import { UserEntity } from './entities/user.entity';
 import { UserService } from 'src/user/user.service';
 
@@ -29,11 +29,11 @@ export class AuthService {
     return this.login(user);
   }
 
-  async login(user: User): Promise<TokenDto> {
+  async login(user: User): Promise<AuthenticationUserResponseDto> {
     return this.generateTokens(user);
   }
 
-  async googleLogin(userEntity: UserEntity): Promise<TokenDto> {
+  async googleLogin(userEntity: UserEntity): Promise<AuthenticationUserResponseDto> {
     this.validateUserEntityOrThrow(userEntity);
 
     const user = await this.userService.findOrCreateOAuthUser(
@@ -44,7 +44,7 @@ export class AuthService {
     return this.generateTokens(user);
   }
 
-  async githubLogin(userEntity: UserEntity): Promise<TokenDto> {
+  async githubLogin(userEntity: UserEntity): Promise<AuthenticationUserResponseDto> {
     this.validateUserEntityOrThrow(userEntity);
 
     const user = await this.userService.findOrCreateOAuthUser(
@@ -55,7 +55,7 @@ export class AuthService {
     return this.generateTokens(user);
   }
 
-  async refreshToken(refreshToken: string): Promise<TokenDto> {
+  async refreshToken(refreshToken: string): Promise<AuthenticationUserResponseDto> {
     try {
       const payload = this.jwtService.verify(refreshToken);
       const user = await this.userService.findUserByUserKey(payload.sub);
@@ -108,7 +108,7 @@ export class AuthService {
     throw new UnauthorizedException('No user from Google');
   }
 
-  private async generateTokens(user: User): Promise<TokenDto> {
+  private async generateTokens(user: User): Promise<AuthenticationUserResponseDto> {
     const payload: JwtPayload = {
       sub: user.userKey,
       email: user.email,
@@ -121,6 +121,12 @@ export class AuthService {
     await this.userService.updateRefreshToken(user.userKey, refreshToken);
 
     return {
+      user: {
+        email: user.email,
+        role: user.role,
+        fullName: user.fullName,
+        profileImage: user.profileImage,
+      },
       accessToken,
       refreshToken,
       expiresIn: 3600, // 1 hour in seconds

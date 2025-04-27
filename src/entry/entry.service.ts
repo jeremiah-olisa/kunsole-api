@@ -2,10 +2,10 @@ import { Injectable } from '@nestjs/common';
 import { PaginatedResult } from 'src/common/entities/pagination.entity';
 import { CreateEntryDto } from './dtos/create-entry.dto';
 import { EntryResponseDto } from './dtos/entry-response.dto';
-import { ListEntriesDto } from './dtos/list-entries.dto';
 import { EntryRepository } from './repositories/entry.repository';
 import { IKeysetPaginationParams } from 'src/common/interfaces/pagination.interface';
 import { UserAppService } from 'src/user-app/user-app.service';
+import { IEntryFilters } from './interfaces/entry.interface';
 
 @Injectable()
 export class EntryService {
@@ -31,7 +31,7 @@ export class EntryService {
   }
 
   async listEntries(
-    filters: ListEntriesDto,
+    filters: IEntryFilters,
     pagination: IKeysetPaginationParams,
     userId?: string,
     appId?: string,

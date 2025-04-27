@@ -7,4 +7,6 @@ export interface IEntryFilters {
   appId?: string;
   userId?: string;
   isRead?: boolean;
+  search?: string;
+  recipient?: string;
 }

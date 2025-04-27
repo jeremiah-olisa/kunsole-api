@@ -15,7 +15,7 @@ import { GithubAuthGuard } from './guards/github-auth.guard';
 import { Request } from 'express';
 import { RegisterDto } from './dtos/register.dto';
 import { LoginDto } from './dtos/login.dto';
-import { TokenDto } from './dtos/token.dto';
+import { AuthenticationUserResponseDto } from './dtos/authentication-user-response.dto';
 import { Public } from './decorators/public.decorator';
 import { SwaggerAuthenticated } from './decorators/swagger-auth.decorator';
 
@@ -41,10 +41,10 @@ export class AuthController {
   @UseGuards(LocalAuthGuard)
   @ApiOperation({ summary: 'Login with email and password' })
   @ApiBody({ type: LoginDto })
-  @ApiResponse({ status: 200, description: 'Login successful', type: TokenDto })
+  @ApiResponse({ status: 200, description: 'Login successful', type: AuthenticationUserResponseDto })
   @ApiResponse({ status: 401, description: 'Invalid credentials' })
   @HttpCode(200)
-  async login(@Req() req: Request): Promise<TokenDto> {
+  async login(@Req() req: Request): Promise<AuthenticationUserResponseDto> {
     return await this.authService.login(req.user);
   }
 
@@ -53,7 +53,7 @@ export class AuthController {
   @Get('google')
   @ApiOperation({ summary: 'OAuth via Google' })
   @HttpCode(200)
-  async googleAuth(@Req() req: Request): Promise<TokenDto> {
+  async googleAuth(@Req() req: Request): Promise<AuthenticationUserResponseDto> {
     return await this.authService.googleLogin(req.user);
   }
 
@@ -62,7 +62,7 @@ export class AuthController {
   @UseGuards(GithubAuthGuard)
   @ApiOperation({ summary: 'OAuth via GitHub' })
   @HttpCode(200)
-  async githubAuth(@Req() req: Request): Promise<TokenDto> {
+  async githubAuth(@Req() req: Request): Promise<AuthenticationUserResponseDto> {
     return await this.authService.githubLogin(req.user);
   }
 
@@ -73,10 +73,10 @@ export class AuthController {
   @ApiResponse({
     status: 200,
     description: 'Google login successful',
-    type: TokenDto,
+    type: AuthenticationUserResponseDto,
   })
   @HttpCode(200)
-  async googleAuthCallback(@Req() req: Request): Promise<TokenDto> {
+  async googleAuthCallback(@Req() req: Request): Promise<AuthenticationUserResponseDto> {
     return await this.authService.login(req.user);
   }
 
@@ -87,10 +87,10 @@ export class AuthController {
   @ApiResponse({
     status: 200,
     description: 'GitHub login successful',
-    type: TokenDto,
+    type: AuthenticationUserResponseDto,
   })
   @HttpCode(200)
-  async githubAuthCallback(@Req() req: Request): Promise<TokenDto> {
+  async githubAuthCallback(@Req() req: Request): Promise<AuthenticationUserResponseDto> {
     return await this.authService.login(req.user);
   }
 
@@ -104,12 +104,12 @@ export class AuthController {
       },
     },
   })
-  @ApiResponse({ status: 200, description: 'Token refreshed', type: TokenDto })
+  @ApiResponse({ status: 200, description: 'Token refreshed', type: AuthenticationUserResponseDto })
   @ApiResponse({ status: 401, description: 'Invalid refresh token' })
   @HttpCode(200)
   async refreshToken(
     @Body('refreshToken') refreshToken: string,
-  ): Promise<TokenDto> {
+  ): Promise<AuthenticationUserResponseDto> {
     return await this.authService.refreshToken(refreshToken);
   }
 }

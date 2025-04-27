@@ -35,6 +35,7 @@ import {
 } from 'src/common/entities/pagination.entity';
 import { Request } from 'express';
 import { UserEntity } from 'src/auth/entities/user.entity';
+import { IPaginatedResult } from 'src/common/interfaces/pagination.interface';
 
 @ApiTags('User App Relationships')
 @Controller('user-apps')
@@ -72,7 +73,7 @@ export class UserAppController {
   async findAll(
     @Query() pagination: IKeysetPaginationParams,
     @Req() req: Request,
-  ): Promise<PaginatedResult<UserAppResponseDto>> {
+  ): Promise<IPaginatedResult<UserAppResponseDto>> {
     const user = new UserEntity(req.user);
 
     return this.userAppService.findAllByUser(user.getUserId(), pagination);

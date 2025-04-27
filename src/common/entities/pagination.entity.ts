@@ -36,6 +36,20 @@ export class PaginatedResult<T> implements IPaginatedResult<T> {
   })
   @IsNumber()
   total: number;
+
+  @ApiProperty({
+    description: 'Number of items per page',
+    type: Number,
+  })
+  @IsNumber()
+  perPage: number;
+
+  @ApiProperty({
+    description: 'Total number of pages',
+    type: Number,
+  })
+  @IsNumber()
+  totalPages: number;
 }
 
 export class KeysetPaginationParams implements IKeysetPaginationParams {

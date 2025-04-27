@@ -109,6 +109,8 @@ export class UserAppRepository {
       nextCursor: items.length > 0 ? items[items.length - 1]?.id : undefined,
       prevCursor: items.length > 0 ? items[0]?.id : undefined,
       total,
+      perPage: limit,
+      totalPages: Math.ceil(total / limit)
     };
   }
 

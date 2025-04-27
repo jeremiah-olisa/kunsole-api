@@ -9,19 +9,12 @@ import {
 import { EntryType } from '@prisma/client';
 import { KeysetPaginationParams } from 'src/common/entities/pagination.entity';
 import { Type } from 'class-transformer';
+import { IEntryFilters } from '../interfaces/entry.interface';
 
-export interface ListEntriesDto {
-  type?: EntryType;
-  fromDate?: string;
-  toDate?: string;
-  appId?: string;
-  userId?: string;
-  isRead?: boolean;
-}
 
 export class ListEntriesQuery
   extends KeysetPaginationParams
-  implements ListEntriesDto {
+  implements IEntryFilters {
   @ApiPropertyOptional({
     description:
       'Filter entries by type. Possible values include "email", "sms", "terminal", etc.',
@@ -38,8 +31,9 @@ export class ListEntriesQuery
     // example: '2023-04-01T00:00:00Z',
   })
   @IsDateString()
+  @Type(() => Date)
   @IsOptional()
-  fromDate?: string;
+  fromDate?: Date;
 
   @ApiPropertyOptional({
     description:
@@ -47,8 +41,9 @@ export class ListEntriesQuery
     // example: '2023-04-30T23:59:59Z',
   })
   @IsDateString()
+  @Type(() => Date)
   @IsOptional()
-  toDate?: string;
+  toDate?: Date;
 
   @ApiPropertyOptional({
     description:
@@ -78,7 +73,7 @@ export class ListEntriesQuery
   @Type(() => Boolean)
   isRead?: boolean;
 
-  getFilters(): ListEntriesDto {
+  getFilters(): IEntryFilters {
     const { getFilters, getPagination, cursor, limit, direction, ...filters } =
       this;
 

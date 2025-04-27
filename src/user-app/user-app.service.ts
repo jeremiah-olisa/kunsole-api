@@ -255,12 +255,11 @@ export class UserAppService {
     userId: string,
     pagination?: IKeysetPaginationParams,
   ): Promise<IPaginatedResult<UserAppResponseDto>> {
-    const result = await this.userAppRepository.getUserApps(userId, pagination);
+    const { data, ...paginationObj } = await this.userAppRepository.getUserApps(userId, pagination);
+    
     return {
-      data: result.data.map(this.toResponseDto),
-      nextCursor: result.nextCursor,
-      prevCursor: result.prevCursor,
-      total: result.total,
+      data: data.map(this.toResponseDto),
+      ...paginationObj,
     };
   }
 

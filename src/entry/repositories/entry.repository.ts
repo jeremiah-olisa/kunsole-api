@@ -68,9 +68,11 @@ export class EntryRepository {
 
     return {
       data: items,
+      perPage: limit,
       nextCursor: items.length > 0 ? items[items.length - 1]?.id : undefined,
       prevCursor: items.length > 0 ? items[0]?.id : undefined,
       total,
+      totalPages: Math.ceil(total / limit)
     } as PaginatedResultEntryEntity;
   }
 
@@ -80,9 +82,20 @@ export class EntryRepository {
     // Apply filters based on presence of the corresponding filter value
     if (filters.type) whereInput.type = filters.type;
     if (filters.appId) whereInput.appId = filters.appId;
+    if (filters.recipient) whereInput.recipient = filters.recipient;
+    // if (filters.isRead) whereInput.isRead = filters.isRead;
+
+    if (filters.search) {
+      whereInput.OR = [
+        ...(whereInput.OR ?? []),
+        { content: { contains: filters.search } },
+        { subject: { contains: filters.search } },
+      ]
+    }
 
     if (filters.userId) {
       whereInput.OR = [
+        ...(whereInput.OR ?? []),
         { userId: filters.userId },
         { app: { userApp: { some: { userId: filters.userId } } } }
       ];

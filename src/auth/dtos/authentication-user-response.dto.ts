@@ -1,6 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
+import { UserEntity } from '../entities/user.entity';
 
-export class TokenDto {
+type AuthenticationUser = Pick<UserEntity, 'email' | 'fullName' | 'profileImage' | 'role'>;
+
+export class AuthenticationUserResponseDto {
+  user: AuthenticationUser;
+
   @ApiProperty({
     example: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...',
     description: 'JWT access token',
