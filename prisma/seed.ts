@@ -1,6 +1,9 @@
-const plans = [
+import { PlanType, Prisma } from "@prisma/client";
+import { InitialiseClient } from "src/common/prisma/prisma.client";
+
+const plans: Prisma.PlanCreateManyInput[] = [
     {
-        type: 'FREE',
+        type: PlanType.SYSTEM,
         name: 'Free Tier',
         description: 'Basic functionality with limitations',
         price: 0,
@@ -15,7 +18,7 @@ const plans = [
         }
     },
     {
-        type: 'BASIC',
+        type: PlanType.SYSTEM,
         name: 'Basic Plan',
         description: 'For small projects',
         price: 9.99,
@@ -30,7 +33,7 @@ const plans = [
         }
     },
     {
-        type: 'GOLD',
+        type: PlanType.SYSTEM,
         name: 'Gold Plan',
         description: 'For growing businesses',
         price: 29.99,
@@ -46,7 +49,7 @@ const plans = [
         }
     },
     {
-        type: 'PREMIUM',
+        type: PlanType.SYSTEM,
         name: 'Premium Plan',
         description: 'Enterprise-grade solution',
         price: 99.99,
@@ -64,3 +67,16 @@ const plans = [
         }
     }
 ];
+
+const seed = async () => {
+    InitialiseClient();
+
+    const planResult = await prisma.plan.createMany({ data: plans });
+    
+    if (planResult.count === 0) {
+        console.log('No plans were created. Check your data.');
+        return;
+    }
+    
+    console.log(`Seeded ${planResult.count} plans`);
+}

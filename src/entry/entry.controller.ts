@@ -18,7 +18,7 @@ import {
   ApiQuery,
   ApiParam,
 } from '@nestjs/swagger';
-import { SwaggerApiKey, SwaggerAuthenticated } from 'src/auth/decorators/swagger-auth.decorator';
+import { SwaggerAuthenticated } from 'src/auth/decorators/swagger-auth.decorator';
 import { EntryService } from './entry.service';
 import { CreateEntryDto } from './dtos/create-entry.dto';
 import {
@@ -27,7 +27,6 @@ import {
 } from './dtos/entry-response.dto';
 import { UserEntity } from 'src/auth/entities/user.entity';
 import { ListEntriesQuery } from './dtos/list-entries.dto';
-import { App } from '@prisma/client';
 
 @ApiTags('Entries')
 @Controller('entries')
