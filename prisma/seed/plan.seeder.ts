@@ -1,8 +1,8 @@
-import { PlanType, Prisma } from "@prisma/client";
-import { InitialiseClient } from "src/common/prisma/prisma.client";
+import { Prisma, PlanType } from "@prisma/client";
 
 const plans: Prisma.PlanCreateManyInput[] = [
     {
+        id: '680dd33a1431506c8d668eca',
         type: PlanType.SYSTEM,
         name: 'Free Tier',
         description: 'Basic functionality with limitations',
@@ -18,10 +18,11 @@ const plans: Prisma.PlanCreateManyInput[] = [
         }
     },
     {
+        id: '680dd33a1431506c8d668ecb',
         type: PlanType.SYSTEM,
         name: 'Basic Plan',
         description: 'For small projects',
-        price: 9.99,
+        price: 4000,
         maxApps: 3,
         maxUsers: 5,
         entryRetentionDays: 7,
@@ -33,10 +34,11 @@ const plans: Prisma.PlanCreateManyInput[] = [
         }
     },
     {
+        id: '680dd33a1431506c8d668ecc',
         type: PlanType.SYSTEM,
         name: 'Gold Plan',
         description: 'For growing businesses',
-        price: 29.99,
+        price: 13000,
         maxApps: 10,
         maxUsers: 20,
         entryRetentionDays: 30,
@@ -49,10 +51,11 @@ const plans: Prisma.PlanCreateManyInput[] = [
         }
     },
     {
+        id: '680dd33a1431506c8d668ecd',
         type: PlanType.SYSTEM,
         name: 'Premium Plan',
         description: 'Enterprise-grade solution',
-        price: 99.99,
+        price: 40000,
         maxApps: 100,
         maxUsers: 500,
         entryRetentionDays: 365,
@@ -68,17 +71,15 @@ const plans: Prisma.PlanCreateManyInput[] = [
     }
 ];
 
-const seed = async () => {
-    InitialiseClient();
+export async function seedPlans() {
 
-    const planResult = await prisma.plan.createMany({ data: plans });
-    
-    if (planResult.count === 0) {
-        console.log('No plans were created. Check your data.');
-        return;
+    for (const { id: planId, ...plan } of plans) {
+        const planResult = await prisma.plan.upsert({
+            where: { id: planId }, // Find by id
+            update: plan, // Update the plan if it exists
+            create: { id: planId, ...plan }, // Create the plan if it doesn't exist
+        });
+
+        console.log(`Upserted plan: ${planResult.name}`);
     }
-    
-    console.log(`Seeded ${planResult.count} plans`);
 }
-
-seed()
