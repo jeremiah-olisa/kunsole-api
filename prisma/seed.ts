@@ -80,3 +80,5 @@ const seed = async () => {
     
     console.log(`Seeded ${planResult.count} plans`);
 }
+
+seed()
